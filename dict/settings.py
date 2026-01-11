@@ -162,16 +162,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # REMOVED S3 SETTINGS - USING LOCAL STORAGE INSTEAD
 # ================================================
 
-# Commented out all AWS S3 settings:
-# AWS_ACCESS_KEY_ID = 'AKIA3EQ3LS2YIFVNU5EA'
-# AWS_SECRET_ACCESS_KEY = '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'
-# AWS_STORAGE_BUCKET_NAME = 'my-django-media-buckets'
-# AWS_REGION = 'eu-north-1'
 
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# AWS_S3_FILE_OVERWRITE = False
-# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-# MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
 
 # ================================================
 # PWA Settings
