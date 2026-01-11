@@ -1,0 +1,864 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumen Deo TV</title>
+    {% load static %}
+<link rel="icon" type="image/png" href="{% static 'img/favicon-96x96.png' %}" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}" />
+<link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
+<link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/apple-touch-icon.png' %}" />
+<link rel="manifest" href="{% static 'img/site.webmanifest' %}" />
+
+<link rel="manifest" href="{% static 'img/manifest.json' %}">
+<meta name="theme-color" content="#000000">
+<link rel="apple-touch-icon" href="{% static 'img/web-app-manifest-192x192.png' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: #fff;
+        }
+    .container {
+        min-height: 100vh;
+        width: 100vw;
+        position: relative;
+        background: url("{% static 'img/magical.jpeg' %}") no-repeat center center;
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+    }   
+        /* Full dark overlay */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+            z-index: 1;
+        }
+
+        /* Floating particles background */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, #FFD700 0%, #FFA500 50%, transparent 70%);
+            border-radius: 50%;
+            animation: float infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Main content layout */
+        .main-content {
+        display: flex;
+        min-height: 100vh;
+        position: relative;
+        z-index: 10;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+        flex-direction: row; /* Ensure row direction for desktop */
+}
+
+        /* Text content section */
+    .text-content {
+        flex: 0 0 35%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-left: 5%;
+        order: 1; /* Make text content appear first (left side) */
+}
+
+        .logo {
+            width: 200px;
+            height: 200px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+            margin-bottom: 20px;
+        }
+
+        .video-description {
+            font-size: 16px;
+            line-height: 1.2;
+            color: #fff;
+            
+            text-align: left;
+            word-break: break-word;
+            margin-bottom: 15px;
+        }
+
+        .video-description span {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .video-duration {
+            font-size: 16px;
+            color: #FFD700;
+            font-weight: 600;
+            font-style: italic;
+            margin-top: 15px;
+        }
+
+        /* Video player section */
+.video-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 60%;
+    margin-right: 5%;
+    order: 2; /* Make video section appear second (right side) */
+}
+
+
+
+        .video-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #FFD700;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+          .video-container {
+            width: 100%;
+             width: 90%;
+            margin: 0 auto;
+         
+            justify-content: center;
+            align-items: center;
+            display: block;
+          }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 65vh;
+            background: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEij63-nhraxNZQVVOZ56JbSpfKUGNwEK8VD3s7tw7teQKfazii-rjgxHHEHRtFyhRopMBSSW6DG304UnH49Wekh3cONNNbxVd0E6w0gxKGF30Zp2ulcUj3nUWXKYuVSvkcX8tijWXRuh91a/w1200-h630-p-k-no-nu/heaven-is-for-real-feature.jpg') no-repeat center center;
+            background-size: cover;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 65vh;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            display: none;
+        }
+
+        .watch-full-movie-btn {
+            background: linear-gradient(to right, #FFD700, #FFA500);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            display: block; /* Initially hidden */
+        }
+
+        .watch-full-movie-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Payment Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .payment-modal {
+            background: #121212;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #FFD700;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .payment-modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            color: #FFD700;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: #FFD700;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .movie-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .movie-poster-small {
+            width: 80px;
+            height: 120px;
+            border-radius: 5px;
+            background: #333;
+            overflow: hidden;
+        }
+
+        .movie-poster-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-details {
+            flex: 1;
+        }
+
+        .movie-title-modal {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #FFD700;
+        }
+
+        .movie-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+
+        .payment-methods {
+            margin-top: 20px;
+        }
+
+        .payment-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: #999;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #FFD700;
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #FFD700;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #FFC000;
+        }
+
+        /* Processing Modal */
+        .processing-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .processing-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .processing-content {
+            background: #121212;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid #FFD700;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: #FFD700;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .processing-title {
+            font-size: 22px;
+            color: #FFD700;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .processing-message {
+            color: #fff;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .processing-notice {
+            color: #FFD700;
+            font-style: italic;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        /* Mobile logo */
+        .mobile-logo-container {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .text-content {
+                flex: none;
+                width: 100%;
+                order: 2;
+                padding: 20px 0;
+                align-items: center;
+                margin-left: 0;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .video-section {
+                order: 1;
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: 30px;
+                margin-right: 0;
+            }
+
+            .video-thumbnail, .video-player {
+                width: 100%;
+                height: 100%;
+            }
+
+            /* Hide logo in text-content on mobile */
+            .text-content .logo {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Show mobile logo */
+            .mobile-logo-container {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 20px;
+                width: 100%;
+            }
+            
+            .mobile-logo {
+                width: 200px;
+                height: 200px;
+                filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+            }
+
+            .video-title {
+                font-size: 28px;
+                margin-bottom: 20px;
+            }
+
+            .video-description {
+                font-size: 15px;
+                margin-top: 20px;
+                text-align: center;
+            }
+
+            .video-description span {
+                display: inline;
+                margin-right: 5px;
+            }
+
+            .video-thumbnail, .video-player {
+                height: 100%;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body, html {
+                overflow-y: auto;
+            }
+            
+            .mobile-logo {
+                width: 200px;
+                height: 200px;
+            }
+
+            .video-title {
+                font-size: 24px;
+            }
+
+            .video-description {
+                font-size: 14px;
+            }
+
+            .video-thumbnail, .video-player {
+                height: 100%;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Floating particles -->
+        <div class="particles" id="particles"></div>
+
+        <!-- Main content -->
+        <div class="main-content">
+            <!-- Mobile logo (hidden on desktop) -->
+            <div class="mobile-logo-container">
+               <img src="{% static 'img/logo.png' %}" alt="Lumen Deo TV Logo" class="logo desktop-logo">
+            </div>
+
+            <!-- Video section -->
+            <div class="video-section">
+                <h2 class="video-title" style="color: #fff;">Video of the month</h2>
+                 <div class="video-container" style="display: flex; flex-direction: column; align-items: center;">
+        <div class="video-thumbnail" id="videoThumbnail"
+             style="
+                position: relative;
+                width: 100%;
+                max-width: 800px;
+                height: 450px;
+                background-image: url('{{thumbnail_url }}');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: contain;
+                background-color: #222;  /* fallback */
+                border-radius: 8px;
+             ">
+             
+            <button id="playButton" style="
+                color: #fff;
+                background: rgba(0, 0, 0, 0.6);
+                border: 2px solid #fff;
+                padding: 12px 25px;
+                border-radius: 50px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                backdrop-filter: blur(5px);
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            ">
+                <i class="fas fa-play"></i> PLAY TRAILER
+            </button>
+        </div>
+                    <video id="videoPlayer" class="video-player" controls autoplay muted playsinline style="width: 100%; height: 100%;">
+   
+  Your browser does not support the video tag.
+</video>
+
+
+                    <button class="watch-full-movie-btn" id="watchFullMovieBtn">
+                        <i class="fas fa-film"></i> WATCH FULL MOVIE
+                    </button>
+                </div>
+            </div>
+
+            <!-- Text content with description -->
+            <div class="text-content">
+                <img src="{% static 'img/logo.png' %}" alt="Lumen Deo TV Logo" class="logo desktop-logo">
+                <div class="video-description">
+                    <span>{{ latest_video.introduction}}</span>
+                   
+                </div>
+                <div class="video-duration">{{ latest_video.length}} Hours</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="payment-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Complete Payment</h3>
+                <button class="close-modal" onclick="hidePaymentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="movie-info">
+                    <div class="movie-poster-small">
+                        <img src="{{thumbnail_url}}"alt="Heaven is for Real">
+                    </div>
+                    <div class="movie-details">
+                        <h4 class="movie-title-modal">{{ latest_video.title}}</h4>
+                        <div class="movie-price">KES 10.00</div>
+                    </div>
+                </div>
+
+                <div class="payment-methods">
+                    <div class="payment-tabs">
+                        <button class="tab-btn active" data-tab="mpesa">M-Pesa</button>
+                        
+                    </div>
+
+                   <div id="mpesa-tab" class="tab-content active">
+    <form id="mpesa-form" method="POST" action="{% url 'mpesa_checkout' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="mpesa-name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Your full name" required>
+        </div>
+      
+        <div class="form-group">
+            <label for="mpesa-phone">M-Pesa Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="e.g. 0712345678" required>
+        </div>
+        
+        <input type="hidden" name="amount" value="10">
+        <button type="submit" class="submit-btn">Pay via M-Pesa</button>
+    </form>
+</div>
+
+
+                    
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Modal -->
+    <div class="processing-modal" id="processingModal">
+        <div class="processing-content">
+            <div class="loader"></div>
+            <h3 class="processing-title">Processing Payment</h3>
+            <p class="processing-message">Please wait while we process your payment...</p>
+            <p class="processing-notice" id="processingNotice"></p>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 15;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 8 + 4;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 7 + 8) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Video autoplay after 10 seconds
+        function startVideoAutoplay() {
+            setTimeout(() => {
+                const thumbnail = document.getElementById('videoThumbnail');
+                const videoPlayer = document.getElementById('videoPlayer');
+                const watchFullBtn = document.getElementById('watchFullMovieBtn');
+                
+                // Replace with your actual YouTube embed URL (must be from youtube.com/embed)
+                videoPlayer.src = "{{ trailer_url}}";
+                thumbnail.src="{{ latest_video.thumbnail.url }}";
+                thumbnail.style.opacity = '0';
+                
+                setTimeout(() => {
+                    thumbnail.style.display = 'none';
+                    videoPlayer.style.display = 'block';
+                    
+                    // Show watch full movie button after video starts
+                    setTimeout(() => {
+                        watchFullBtn.style.display = 'block';
+                    }, 1000);
+                }, 500);
+            }, 15000); // Changed to 10 seconds delay
+        }
+
+        // Payment Modal Functions
+        function showPaymentModal() {
+            document.getElementById('paymentModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hidePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Processing Modal Functions
+        function showProcessingModal(message = "") {
+            document.getElementById('processingNotice').textContent = message;
+            document.getElementById('processingModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideProcessingModal() {
+            document.getElementById('processingModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(tabId + '-tab').classList.add('active');
+            });
+        });
+
+      
+
+        
+        
+        // Close modal when clicking outside
+        document.getElementById('paymentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hidePaymentModal();
+            }
+        });
+
+        // Play button click handler
+        document.getElementById('playButton').addEventListener('click', function(e) {
+            e.stopPropagation();
+            startVideoAutoplay();
+        });
+
+        // Watch full movie button click handler
+        document.getElementById('watchFullMovieBtn').addEventListener('click', function() {
+            showPaymentModal();
+        });
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            startVideoAutoplay();
+        });
+
+        // Add more particles periodically
+        setInterval(function() {
+            const particles = document.querySelectorAll('.particle');
+            if (particles.length < 20) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 8 + 4;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 7 + 8) + 's';
+                
+                document.getElementById('particles').appendChild(particle);
+                
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 15000);
+            }
+        }, 2000);
+    </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register("{% static 'js/serviceworker.js' %}")
+        .then(reg => console.log("✅ Service Worker registered:", reg.scope))
+        .catch(err => console.error("❌ Service Worker registration failed:", err));
+    });
+  }
+</script>
+
+</body>
+</html>

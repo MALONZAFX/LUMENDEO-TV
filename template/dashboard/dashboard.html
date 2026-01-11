@@ -1,0 +1,1792 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMENDEO TV - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ====================
+           COMPLETE DASHBOARD STYLES
+           ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
+        body {
+            background: #EFF6FF;
+            color: #000000;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background: #1E3A8A;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            padding-top: 30px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .logo {
+            padding: 0 30px 40px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-size: 26px;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: #FFD700;
+            font-size: 13px;
+        }
+
+        .nav-section {
+            padding: 0 20px;
+            margin-bottom: 30px;
+        }
+
+        .nav-section h3 {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 8px;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background: #FFD700;
+            color: black;
+            font-weight: 600;
+        }
+
+        .nav-links i {
+            width: 20px;
+            font-size: 18px;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 30px;
+            width: calc(100% - 260px);
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        .page-title h2 {
+            font-size: 28px;
+            color: #1E3A8A;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            color: #6B7280;
+            margin-top: 5px;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .welcome-message {
+            text-align: right;
+        }
+
+        .welcome-message h4 {
+            color: #1E3A8A;
+            font-weight: 600;
+        }
+
+        .welcome-message p {
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        .admin-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #1E3A8A, #3B82F6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* SECTIONS */
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        .section-header h3 {
+            color: #1E3A8A;
+            font-size: 22px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header i {
+            color: #FFD700;
+        }
+
+        /* FORM STYLES */
+        .upload-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1E3A8A;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #1E3A8A;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #E5E7EB;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #F9FAFB;
+        }
+
+        .file-upload-area:hover {
+            border-color: #1E3A8A;
+            background: rgba(30, 58, 138, 0.03);
+        }
+
+        .file-upload-area i {
+            font-size: 48px;
+            color: #1E3A8A;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+
+        .upload-btn {
+            background: linear-gradient(to right, #1E3A8A, #3B82F6);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.2);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-gold {
+            background: #FFD700;
+            color: black;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* TABLE STYLES */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .table thead {
+            background: linear-gradient(to right, #1E3A8A, #3B82F6);
+        }
+
+        .table th {
+            padding: 16px 20px;
+            text-align: left;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .table tbody tr:hover {
+            background: #F9FAFB;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-paid { background: rgba(16, 185, 129, 0.15); color: #10B981; }
+        .status-pending { background: rgba(239, 68, 68, 0.15); color: #EF4444; }
+
+        /* MESSAGES */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10B981;
+            color: #10B981;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #EF4444;
+            color: #EF4444;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3B82F6;
+            color: #3B82F6;
+        }
+
+        /* LOADING */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #FFD700;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* STATS CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 5px solid #1E3A8A;
+        }
+
+        .stat-card h3 {
+            color: #1E3A8A;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        /* TABS */
+        .tab-buttons {
+            display: flex;
+            border-bottom: 2px solid #E5E7EB;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            font-weight: 600;
+            color: #6B7280;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-button.active {
+            color: #1E3A8A;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #1E3A8A;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                padding-top: 20px;
+            }
+            .logo h1, 
+            .logo p,
+            .nav-section h3,
+            .nav-links span {
+                display: none;
+            }
+            .logo {
+                padding: 0 15px 20px;
+            }
+            .nav-section {
+                padding: 0 10px;
+            }
+            .nav-links a {
+                justify-content: center;
+                padding: 15px;
+            }
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+                width: calc(100% - 70px);
+            }
+            .top-bar {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+            .admin-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            .upload-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* FIXES FOR VISIBILITY */
+        #contentSection {
+            opacity: 1;
+        }
+
+        .section:not(.active) {
+            display: none;
+        }
+        
+        /* THUMBNAIL PREVIEW */
+        .thumbnail-preview {
+            max-width: 200px;
+            max-height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #E5E7EB;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p id="loadingText">Processing...</p>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>LUMENDEO TV</h1>
+                <p>Admin Control Panel</p>
+            </div>
+
+            <div class="nav-section">
+                <h3>Main</h3>
+                <ul class="nav-links">
+                    <li><a href="javascript:void(0)" onclick="showSection('dashboard')" class="active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>Management</h3>
+                <ul class="nav-links">
+                    <li><a href="javascript:void(0)" onclick="showSection('content')" data-section="content">
+                        <i class="fas fa-film"></i> <span>Content</span>
+                    </a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('users')" data-section="users">
+                        <i class="fas fa-users"></i> <span>Users & Payments</span>
+                    </a></li>
+                    <li><a href="javascript:void(0)" onclick="showSection('settings')" data-section="settings">
+                        <i class="fas fa-cog"></i> <span>Settings</span>
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>Quick Actions</h3>
+                <ul class="nav-links">
+                    <li><a href="{% url 'home' %}" target="_blank"><i class="fas fa-external-link-alt"></i> <span>View Website</span></a></li>
+                    <li><a href="{% url 'admin_logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Alert Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="page-title">
+                    <h2 id="pageTitle">Dashboard Overview</h2>
+                    <p id="pageDate">{{ today_date }}</p>
+                </div>
+
+                <div class="admin-info">
+                    <div class="welcome-message">
+                        <h4>Welcome, {{ admin_name }}</h4>
+                        <p>Last login: {{ current_time|time:"H:i" }}</p>
+                    </div>
+                    <div class="admin-avatar">
+                        {{ admin_name|first|upper }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====================
+                 DASHBOARD SECTION
+                 ==================== -->
+            <div id="dashboardSection" class="section active">
+                <div class="section-header">
+                    <h3><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h3>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card" style="border-left-color: #1E3A8A;">
+                        <h3>{{ stats.total_videos|default:"0" }}</h3>
+                        <p>Total Videos</p>
+                    </div>
+                    <div class="stat-card" style="border-left-color: #10B981;">
+                        <h3>{{ stats.total_users|default:"0" }}</h3>
+                        <p>Total Users</p>
+                    </div>
+                    <div class="stat-card" style="border-left-color: #FFD700;">
+                        <h3>KES {{ stats.total_revenue|default:"0" }}</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; padding: 30px 0; background: white; border-radius: 10px; margin-bottom: 30px;">
+                    <h3 style="color: #1E3A8A; margin-bottom: 20px;">Welcome to Your Dashboard!</h3>
+                    <p>Click on the sidebar links to navigate to different sections:</p>
+                    <div style="display: flex; gap: 20px; justify-content: center; margin-top: 30px; flex-wrap: wrap;">
+                        <button onclick="showSection('content')" class="upload-btn">
+                            <i class="fas fa-film"></i> Go to Content
+                        </button>
+                        <button onclick="showSection('users')" class="upload-btn" style="background: #10B981;">
+                            <i class="fas fa-users"></i> Go to Users
+                        </button>
+                        <button onclick="showSection('settings')" class="upload-btn" style="background: #F59E0B;">
+                            <i class="fas fa-cog"></i> Go to Settings
+                        </button>
+                    </div>
+                </div>
+                
+                {% if latest_videos %}
+                <div class="section" style="margin-top: 30px;">
+                    <div class="section-header">
+                        <h3><i class="fas fa-film"></i> Latest Videos</h3>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Upload Date</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for video in latest_videos|slice:":5" %}
+                                <tr>
+                                    <td style="font-weight: 600; color: #1E3A8A;">{{ video.title }}</td>
+                                    <td>{{ video.date_uploaded|date:"M d, Y" }}</td>
+                                    <td>{{ video.movie_type|title }}</td>
+                                    <td>
+                                        {% if video.is_expired %}
+                                        <span class="status-badge status-pending">Expired</span>
+                                        {% else %}
+                                        <span class="status-badge status-paid">Active</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+<!-- ====================
+                 CONTENT SECTION
+                 ==================== -->
+                 <div id="contentSection" class="section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-film"></i> Content Management</h3>
+                        <button onclick="showSection('dashboard')" class="btn btn-gold">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </button>
+                    </div>
+    
+                    <!-- Upload Form -->
+                    <div style="background: white; border-radius: 10px; padding: 30px; margin-bottom: 30px;">
+                        <h4 style="color: #1E3A8A; margin-bottom: 20px; font-size: 18px;"><i class="fas fa-upload"></i> Upload New Video</h4>
+                        
+                        <!-- IMPORTANT: Changed from URL inputs to FILE inputs for LOCAL storage -->
+                        <form id="uploadForm" method="POST" action="/dashboard/ajax/upload-video/" enctype="multipart/form-data" onsubmit="return uploadVideo(event)">
+                            {% csrf_token %}
+                            <div class="upload-form">
+                                <div class="form-group">
+                                    <label for="title">Video Title *</label>
+                                    <input type="text" id="title" name="title" class="form-control" placeholder="Enter video title" required>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label for="year_published">Year Published</label>
+                                    <input type="number" id="year_published" name="year_published" class="form-control" placeholder="2024" min="1900" max="2100" value="{{ current_year }}">
+                                </div>
+    
+                                <!-- CHANGED: Video FILE upload (not URL) -->
+                                <div class="form-group">
+                                    <label for="video">Full Video File * (.mp4, .mov, .avi)</label>
+                                    <input type="file" id="video" name="video" class="form-control" accept="video/*" required>
+                                    <small style="color: #6B7280; font-size: 12px;">Upload the video file directly to your server</small>
+                                </div>
+    
+                                <!-- CHANGED: Trailer FILE upload (not URL) -->
+                                <div class="form-group">
+                                    <label for="trailer">Trailer File * (.mp4, .mov, .avi)</label>
+                                    <input type="file" id="trailer" name="trailer" class="form-control" accept="video/*" required>
+                                    <small style="color: #6B7280; font-size: 12px;">Upload the trailer file directly to your server</small>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label for="length">Duration (Hours)</label>
+                                    <input type="text" id="length" name="length" class="form-control" placeholder="2.0" value="2.0">
+                                </div>
+    
+                                <div class="form-group">
+                                    <label for="movie_type">Movie Type</label>
+                                    <select id="movie_type" name="movie_type" class="form-control">
+                                        <option value="drama">Drama</option>
+                                        <option value="action">Action</option>
+                                        <option value="comedy">Comedy</option>
+                                        <option value="inspirational">Inspirational</option>
+                                    </select>
+                                </div>
+    
+                                <div class="form-group full-width">
+                                    <label for="introduction">Introduction Text *</label>
+                                    <textarea id="introduction" name="introduction" class="form-control" 
+                                              placeholder="Enter the description that appears on homepage. Break into 6-word chunks for better display." 
+                                              rows="4" required></textarea>
+                                    <small style="color: #6B7280; font-size: 12px; margin-top: 5px; display: block;">
+                                        Tip: Write in 6-word chunks for perfect homepage display
+                                    </small>
+                                </div>
+    
+                                <div class="form-group">
+                                    <label for="cast">Cast Members</label>
+                                    <input type="text" id="cast" name="cast" class="form-control" placeholder="Actor 1, Actor 2, Actor 3">
+                                </div>
+    
+                                <div class="form-group">
+                                    <label for="theme">Theme</label>
+                                    <input type="text" id="theme" name="theme" class="form-control" placeholder="Faith, Hope, Love, etc.">
+                                </div>
+    
+                                <div class="form-group">
+                                    <label for="expire_date">Expiration Date</label>
+                                    <input type="date" id="expire_date" name="expire_date" class="form-control" value="{{ default_expire }}">
+                                </div>
+    
+                                <!-- THUMBNAIL UPLOAD -->
+                                <div class="form-group full-width">
+                                    <label>Thumbnail Image *</label>
+                                    <div class="file-upload-area" onclick="document.getElementById('thumbnail').click()" id="uploadArea">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Click to upload thumbnail image</p>
+                                        <p style="font-size: 13px; color: #6B7280; margin-top: 5px;">
+                                            Recommended: 1280x720px, max 5MB (JPG, PNG)
+                                        </p>
+                                    </div>
+                                    <input type="file" id="thumbnail" name="thumbnail" accept="image/*" style="display: none;" required>
+                                    <div id="thumbnailPreview" style="margin-top: 15px;"></div>
+                                </div>
+                            </div>
+    
+                            <button type="submit" class="upload-btn">
+                                <i class="fas fa-upload"></i> Upload Video Content
+                            </button>
+                        </form>
+                    </div>
+    
+                    <!-- Video List -->
+                    <div style="background: white; border-radius: 10px; padding: 30px;">
+                        <div class="section-header">
+                            <h3><i class="fas fa-film"></i> All Videos</h3>
+                            <button onclick="loadAllVideos()" class="upload-btn" style="background: #10B981;">
+                                <i class="fas fa-redo"></i> Refresh
+                            </button>
+                        </div>
+    
+                        {% if all_videos %}
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Thumbnail</th>
+                                        <th>Title</th>
+                                        <th>Upload Date</th>
+                                        <th>Type</th>
+                                        <th>Expires</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for video in all_videos %}
+                                    <tr>
+                                        <td>
+                                            {% if video.thumbnail %}
+                                                <img src="{{ video.thumbnail.url }}" 
+                                                     alt="{{ video.title }}" 
+                                                     style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #E5E7EB;">
+                                            {% else %}
+                                                <div style="width: 60px; height: 40px; background: #E5E7EB; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fas fa-image" style="color: #6B7280; font-size: 12px;"></i>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td style="font-weight: 600; color: #1E3A8A;">{{ video.title }}</td>
+                                        <td>{{ video.date_uploaded|date:"M d, Y" }}</td>
+                                        <td>{{ video.movie_type|title }}</td>
+                                        <td>{{ video.expire_date|date:"M d, Y" }}</td>
+                                        <td>
+                                            {% if video.is_expired %}
+                                            <span class="status-badge status-pending">Expired</span>
+                                            {% else %}
+                                            <span class="status-badge status-paid">Active</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div style="display: flex; gap: 8px; align-items: center;">
+                                                <button onclick="editVideo('{{ video.id }}')" 
+                                                        style="background: #1E3A8A; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 13px; min-width: 80px; display: inline-flex; align-items: center; justify-content: center; gap: 5px;">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </button>
+                                                <button onclick="deleteVideo('{{ video.id }}')" 
+                                                        style="background: #EF4444; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 13px; min-width: 80px; display: inline-flex; align-items: center; justify-content: center; gap: 5px;">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div style="text-align: center; padding: 40px; color: #6B7280;">
+                            <i class="fas fa-film" style="font-size: 48px; opacity: 0.5; margin-bottom: 20px;"></i>
+                            <h4 style="color: #1E3A8A; margin-bottom: 10px;">No videos uploaded yet</h4>
+                            <p>Upload your first video to get started.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            <!-- ====================
+                 USERS SECTION
+                 ==================== -->
+            <div id="usersSection" class="section">
+                <div class="section-header">
+                    <h3><i class="fas fa-users"></i> Users & Payments</h3>
+                    <button onclick="showSection('dashboard')" class="btn btn-gold">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="switchTab('users')">Users</button>
+                    <button class="tab-button" onclick="switchTab('payments')">Payments</button>
+                </div>
+
+                <!-- Users Tab -->
+                <div id="usersTab" class="tab-content active">
+                    {% if all_users %}
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Phone</th>
+                                    <th>Join Date</th>
+                                    <th>Total Payments</th>
+                                    <th>Amount Spent</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in all_users %}
+                                <tr>
+                                    <td style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #1E3A8A, #3B82F6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                            {{ user.name|first|upper }}
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 600; color: #1E3A8A;">{{ user.name }}</div>
+                                        </div>
+                                    </td>
+                                    <td>{{ user.phone }}</td>
+                                    <td>{{ user.join_date|date:"M d, Y" }}</td>
+                                    <td>{{ user.total_payments }}</td>
+                                    <td style="font-weight: 600;">KES {{ user.amount_spent }}</td>
+                                    <td>
+                                        {% if user.status == 'paid' %}
+                                        <span class="status-badge status-paid">Paid</span>
+                                        {% else %}
+                                        <span class="status-badge status-pending">Free</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div style="text-align: center; padding: 40px; color: #6B7280;">
+                        <i class="fas fa-users-slash" style="font-size: 48px; opacity: 0.5; margin-bottom: 20px;"></i>
+                        <h4 style="color: #1E3A8A; margin-bottom: 10px;">No users found</h4>
+                        <p>No users have registered yet.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Payments Tab -->
+                <div id="paymentsTab" class="tab-content">
+                    {% if all_payments %}
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction</th>
+                                    <th>User</th>
+                                    <th>Phone</th>
+                                    <th>Movie</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payment in all_payments %}
+                                <tr>
+                                    <td>TXN{{ payment.id|stringformat:"06d" }}</td>
+                                    <td>{{ payment.name }}</td>
+                                    <td>{{ payment.phone }}</td>
+                                    <td>{{ payment.movie.title|truncatechars:20 }}</td>
+                                    <td style="font-weight: 600;">KES {{ payment.amount }}</td>
+                                    <td>{{ payment.timestamp|date:"M d, Y H:i" }}</td>
+                                    <td>
+                                        {% if payment.status %}
+                                        <span class="status-badge status-paid">Paid</span>
+                                        {% else %}
+                                        <span class="status-badge status-pending">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div style="text-align: center; padding: 40px; color: #6B7280;">
+                        <i class="fas fa-receipt" style="font-size: 48px; opacity: 0.5; margin-bottom: 20px;"></i>
+                        <h4 style="color: #1E3A8A; margin-bottom: 10px;">No payment history</h4>
+                        <p>No payments have been made yet.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- ====================
+                 SETTINGS SECTION
+                 ==================== -->
+            <div id="settingsSection" class="section">
+                <div class="section-header">
+                    <h3><i class="fas fa-cog"></i> Settings</h3>
+                    <button onclick="showSection('dashboard')" class="btn btn-gold">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </div>
+
+                <form id="settingsForm" method="POST" action="/dashboard/ajax/save-settings/" onsubmit="return saveSettings(event)">
+                    {% csrf_token %}
+                    <div style="max-width: 600px; margin: 0 auto;">
+                        <div style="margin-bottom: 30px;">
+                            <h4 style="color: #1E3A8A; margin-bottom: 15px;">Admin Account</h4>
+                            <div class="form-group">
+                                <label>Admin Name</label>
+                                <input type="text" class="form-control" value="{{ admin_name }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" class="form-control" name="admin_email" placeholder="admin@lumendeo.tv" value="{{ admin_email }}">
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 30px;">
+                            <h4 style="color: #1E3A8A; margin-bottom: 15px;">Payment Settings</h4>
+                            <div class="form-group">
+                                <label>Payment Amount (KES)</label>
+                                <input type="number" class="form-control" name="payment_amount" value="10" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Trailer Duration (seconds)</label>
+                                <input type="number" class="form-control" name="trailer_duration" value="162" min="1">
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 30px;">
+                            <h4 style="color: #1E3A8A; margin-bottom: 15px;">Content Settings</h4>
+                            <div class="form-group">
+                                <label>Default Video Duration (days)</label>
+                                <input type="number" class="form-control" name="video_duration" value="30" min="1" max="365">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="upload-btn" style="width: 100%;">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+<!-- ====================
+     EDIT VIDEO MODAL
+     ==================== -->
+     <div id="editModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 9999; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: white; border-radius: 15px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; padding: 30px; position: relative;">
+            <button onclick="closeEditModal()" style="position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; color: #6B7280; cursor: pointer;">&times;</button>
+            
+            <h2 style="color: #1E3A8A; margin-bottom: 30px; font-size: 24px;"><i class="fas fa-edit"></i> Edit Video</h2>
+            
+            <form id="editVideoForm" method="POST" enctype="multipart/form-data" onsubmit="return updateVideo(event)">
+                {% csrf_token %}
+                <input type="hidden" id="edit_video_id" name="video_id">
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                    <!-- Title -->
+                    <div class="form-group">
+                        <label for="edit_title">Video Title *</label>
+                        <input type="text" id="edit_title" name="title" class="form-control" required>
+                    </div>
+    
+                    <!-- Year Published -->
+                    <div class="form-group">
+                        <label for="edit_year_published">Year Published</label>
+                        <input type="number" id="edit_year_published" name="year_published" class="form-control" min="1900" max="2100">
+                    </div>
+    
+                    <!-- Video File (Optional update) -->
+                    <div class="form-group">
+                        <label for="edit_video">Full Video File (Leave empty to keep current)</label>
+                        <input type="file" id="edit_video" name="video" class="form-control" accept="video/*">
+                        <small style="color: #6B7280; font-size: 12px;">Current: <span id="current_video_name" style="color: #1E3A8A;"></span></small>
+                    </div>
+    
+                    <!-- Trailer File (Optional update) -->
+                    <div class="form-group">
+                        <label for="edit_trailer">Trailer File (Leave empty to keep current)</label>
+                        <input type="file" id="edit_trailer" name="trailer" class="form-control" accept="video/*">
+                        <small style="color: #6B7280; font-size: 12px;">Current: <span id="current_trailer_name" style="color: #1E3A8A;"></span></small>
+                    </div>
+    
+                    <!-- Duration -->
+                    <div class="form-group">
+                        <label for="edit_length">Duration (Hours)</label>
+                        <input type="text" id="edit_length" name="length" class="form-control" placeholder="2.0">
+                    </div>
+    
+                    <!-- Movie Type -->
+                    <div class="form-group">
+                        <label for="edit_movie_type">Movie Type</label>
+                        <select id="edit_movie_type" name="movie_type" class="form-control">
+                            <option value="drama">Drama</option>
+                            <option value="action">Action</option>
+                            <option value="comedy">Comedy</option>
+                            <option value="inspirational">Inspirational</option>
+                        </select>
+                    </div>
+    
+                    <!-- Introduction -->
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="edit_introduction">Introduction Text *</label>
+                        <textarea id="edit_introduction" name="introduction" class="form-control" rows="4" required></textarea>
+                    </div>
+    
+                    <!-- Cast -->
+                    <div class="form-group">
+                        <label for="edit_cast">Cast Members</label>
+                        <input type="text" id="edit_cast" name="cast" class="form-control" placeholder="Actor 1, Actor 2, Actor 3">
+                    </div>
+    
+                    <!-- Theme -->
+                    <div class="form-group">
+                        <label for="edit_theme">Theme</label>
+                        <input type="text" id="edit_theme" name="theme" class="form-control" placeholder="Faith, Hope, Love, etc.">
+                    </div>
+    
+                    <!-- Expiration Date -->
+                    <div class="form-group">
+                        <label for="edit_expire_date">Expiration Date</label>
+                        <input type="date" id="edit_expire_date" name="expire_date" class="form-control">
+                    </div>
+    
+                    <!-- Thumbnail -->
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Thumbnail Image (Leave empty to keep current)</label>
+                        <div style="display: flex; gap: 30px; align-items: center; margin-top: 10px;">
+                            <div style="flex: 0 0 200px;">
+                                <img id="current_thumbnail" src="" alt="Current thumbnail" 
+                                     style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; border: 2px solid #E5E7EB;">
+                            </div>
+                            <div style="flex: 1;">
+                                <input type="file" id="edit_thumbnail" name="thumbnail" class="form-control" accept="image/*">
+                                <small style="color: #6B7280; font-size: 12px;">Leave empty to keep current image</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 30px; padding-top: 20px; border-top: 2px solid #E5E7EB;">
+                    <button type="button" onclick="closeEditModal()" 
+                            style="padding: 12px 25px; background: #EF4444; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" 
+                            style="padding: 12px 25px; background: #1E3A8A; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <style>
+        /* Add these styles to your existing CSS */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit {
+    background: linear-gradient(to right, #1E3A8A, #3B82F6);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.btn-delete {
+    background: linear-gradient(to right, #EF4444, #DC2626);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.btn-edit:hover, .btn-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+    </style>
+
+    <script>
+        // ====================
+        // SECTION NAVIGATION - FIXED
+        // ====================
+        function showSection(section) {
+            console.log('Switching to section:', section);
+            
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(el => {
+                el.classList.remove('active');
+                el.style.display = 'none';
+            });
+            
+            // Remove active class from all nav links
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected section
+            const sectionElement = document.getElementById(section + 'Section');
+            if (sectionElement) {
+                sectionElement.classList.add('active');
+                sectionElement.style.display = 'block';
+                
+                // Update page title
+                const titles = {
+                    'dashboard': 'Dashboard Overview',
+                    'content': 'Content Management',
+                    'users': 'Users & Payments',
+                    'settings': 'Settings'
+                };
+                document.getElementById('pageTitle').textContent = titles[section] || 'Dashboard';
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    if (link.getAttribute('data-section') === section) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                showAlert(`Switched to ${titles[section] || section}`, 'info');
+            }
+        }
+
+        // ====================
+        // TAB SWITCHING
+        // ====================
+        function switchTab(tabName) {
+            console.log('Switching to tab:', tabName);
+            
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+                tab.style.display = 'none';
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            const tabElement = document.getElementById(tabName + 'Tab');
+            if (tabElement) {
+                tabElement.classList.add('active');
+                tabElement.style.display = 'block';
+                
+                // Activate clicked tab button
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    if (btn.textContent.trim().toLowerCase().includes(tabName)) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        // ====================
+        // VIDEO UPLOAD FUNCTION (UPDATED FOR LOCAL FILES)
+        // ====================
+        function uploadVideo(event) {
+            event.preventDefault();
+            showLoading('Uploading video...');
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            // Basic validation
+            const requiredFields = ['title', 'introduction'];
+            for (let field of requiredFields) {
+                if (!formData.get(field)) {
+                    hideLoading();
+                    showAlert(`Please fill in the ${field} field`, 'error');
+                    return false;
+                }
+            }
+            
+            // Check video file
+            const videoInput = document.getElementById('video');
+            if (!videoInput.files[0]) {
+                hideLoading();
+                showAlert('Please select a video file', 'error');
+                return false;
+            }
+            
+            // Check trailer file
+            const trailerInput = document.getElementById('trailer');
+            if (!trailerInput.files[0]) {
+                hideLoading();
+                showAlert('Please select a trailer file', 'error');
+                return false;
+            }
+            
+            // Check thumbnail
+            const thumbnailInput = document.getElementById('thumbnail');
+            if (!thumbnailInput.files[0]) {
+                hideLoading();
+                showAlert('Please select a thumbnail image', 'error');
+                return false;
+            }
+            
+            // Validate file sizes (5GB max for videos, 5MB for thumbnails)
+            const videoFile = videoInput.files[0];
+            const trailerFile = trailerInput.files[0];
+            const thumbnailFile = thumbnailInput.files[0];
+            
+            if (videoFile.size > 5 * 1024 * 1024 * 1024) { // 5GB
+                hideLoading();
+                showAlert('Video file is too large (max 5GB)', 'error');
+                return false;
+            }
+            
+            if (trailerFile.size > 5 * 1024 * 1024 * 1024) { // 5GB
+                hideLoading();
+                showAlert('Trailer file is too large (max 5GB)', 'error');
+                return false;
+            }
+            
+            if (thumbnailFile.size > 5 * 1024 * 1024) { // 5MB
+                hideLoading();
+                showAlert('Thumbnail image is too large (max 5MB)', 'error');
+                return false;
+            }
+            
+            // Validate file types
+            const validVideoTypes = ['video/mp4', 'video/mov', 'video/avi', 'video/webm'];
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+            
+            if (!validVideoTypes.includes(videoFile.type)) {
+                hideLoading();
+                showAlert('Please upload a valid video file (MP4, MOV, AVI, WEBM)', 'error');
+                return false;
+            }
+            
+            if (!validVideoTypes.includes(trailerFile.type)) {
+                hideLoading();
+                showAlert('Please upload a valid trailer file (MP4, MOV, AVI, WEBM)', 'error');
+                return false;
+            }
+            
+            if (!validImageTypes.includes(thumbnailFile.type)) {
+                hideLoading();
+                showAlert('Please upload a valid image file (JPG, PNG, GIF)', 'error');
+                return false;
+            }
+            
+            // AJAX upload
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    form.reset();
+                    document.getElementById('thumbnailPreview').innerHTML = '';
+                    document.getElementById('uploadArea').innerHTML = `
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload thumbnail</p>
+                        <p style="font-size: 13px; color: #6B7280; margin-top: 5px;">
+                            Recommended: 1280x720px, max 5MB (JPG, PNG)
+                        </p>
+                    `;
+                    
+                    // Reload page to show new video
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    showAlert('Error: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                showAlert('Upload failed: ' + error.message, 'error');
+            });
+            
+            return false;
+        }
+
+        // ====================
+        // THUMBNAIL PREVIEW
+        // ====================
+        document.getElementById('thumbnail')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('thumbnailPreview');
+            const uploadArea = document.getElementById('uploadArea');
+            
+            if (file) {
+                // Validate file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    showAlert('File size must be less than 5MB', 'error');
+                    this.value = '';
+                    return;
+                }
+                
+                // Validate file type
+                const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+                if (!validTypes.includes(file.type)) {
+                    showAlert('Please upload a valid image file (JPG, PNG, GIF)', 'error');
+                    this.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (uploadArea) {
+                        uploadArea.innerHTML = `
+                            <i class="fas fa-check-circle" style="color: #10B981;"></i>
+                            <p>Thumbnail selected</p>
+                        `;
+                        uploadArea.style.borderColor = '#10B981';
+                        uploadArea.style.background = 'rgba(16, 185, 129, 0.05)';
+                    }
+                    
+                    if (preview) {
+                        preview.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 20px; background: #F9FAFB; padding: 20px; border-radius: 10px; border: 1px solid #E5E7EB;">
+                                <img src="${e.target.result}" style="width: 150px; height: 100px; object-fit: cover; border-radius: 6px; border: 2px solid #1E3A8A;">
+                                <div>
+                                    <p style="font-weight: 600; color: #1E3A8A; margin-bottom: 5px;">${file.name}</p>
+                                    <p style="font-size: 13px; color: #6B7280; margin-bottom: 3px;">${(file.size / 1024).toFixed(2)} KB</p>
+                                    <p style="font-size: 12px; color: #10B981;"><i class="fas fa-check"></i> Ready for upload</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ====================
+        // SETTINGS SAVE
+        // ====================
+        function saveSettings(event) {
+            event.preventDefault();
+            showLoading('Saving settings...');
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                } else {
+                    showAlert('Error: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                showAlert('Save failed: ' + error.message, 'error');
+            });
+            
+            return false;
+        }
+
+        // ====================
+        // VIDEO ACTIONS
+        // ====================
+        function editVideo(videoId) {
+            showAlert('Edit feature coming soon!', 'info');
+        }
+
+        function deleteVideo(videoId) {
+            if (confirm('Are you sure you want to delete this video? This action cannot be undone.')) {
+                showLoading('Deleting video...');
+                
+                fetch(`/dashboard/ajax/video/${videoId}/delete/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    hideLoading();
+                    
+                    if (data.success) {
+                        showAlert(data.message, 'success');
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        showAlert('Error: ' + data.error, 'error');
+                    }
+                })
+                .catch(error => {
+                    hideLoading();
+                    showAlert('Delete failed: ' + error.message, 'error');
+                });
+            }
+        }
+
+        function loadAllVideos() {
+            showLoading('Refreshing video list...');
+            setTimeout(() => {
+                hideLoading();
+                showAlert('Video list refreshed!', 'success');
+            }, 1000);
+        }
+
+        // ====================
+        // UTILITY FUNCTIONS
+        // ====================
+        function showLoading(message = 'Processing...') {
+            const loading = document.getElementById('loading');
+            const loadingText = document.getElementById('loadingText');
+            if (loading && loadingText) {
+                loadingText.textContent = message;
+                loading.style.display = 'flex';
+            }
+        }
+
+        function hideLoading() {
+            const loading = document.getElementById('loading');
+            if (loading) {
+                loading.style.display = 'none';
+            }
+        }
+
+        function showAlert(message, type = 'info') {
+            // Remove existing alerts
+            document.querySelectorAll('.alert').forEach(alert => {
+                if (alert.parentNode) {
+                    alert.parentNode.removeChild(alert);
+                }
+            });
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                ${message}
+            `;
+            
+            const mainContent = document.querySelector('.main-content');
+            if (mainContent) {
+                mainContent.insertBefore(alertDiv, mainContent.firstChild);
+                
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    alertDiv.style.transition = 'all 0.3s ease';
+                    alertDiv.style.opacity = '0';
+                    setTimeout(() => {
+                        if (alertDiv.parentNode) {
+                            alertDiv.parentNode.removeChild(alertDiv);
+                        }
+                    }, 300);
+                }, 5000);
+            }
+        }
+
+        // ====================
+        // INITIALIZATION
+        // ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Dashboard initialized - Using LOCAL file storage');
+            
+            // Check URL for section
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlSection = urlParams.get('section');
+            
+            // Set initial section
+            let initialSection = 'dashboard';
+            if (urlSection && ['dashboard', 'content', 'users', 'settings'].includes(urlSection)) {
+                initialSection = urlSection;
+            }
+            
+            // Auto-set expire date if empty
+            const expireInput = document.getElementById('expire_date');
+            if (expireInput && !expireInput.value) {
+                const today = new Date();
+                const expireDate = new Date(today);
+                expireDate.setDate(today.getDate() + 30);
+                expireInput.value = expireDate.toISOString().split('T')[0];
+            }
+            
+            // Set year to current year
+            const yearInput = document.getElementById('year_published');
+            if (yearInput && !yearInput.value) {
+                yearInput.value = new Date().getFullYear();
+            }
+            
+            // Initialize the dashboard
+            setTimeout(() => {
+                showSection(initialSection);
+            }, 100);
+            
+            // Auto-hide alerts after 5 seconds
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(alert => {
+                    alert.style.transition = 'all 0.3s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.parentNode.removeChild(alert);
+                        }
+                    }, 300);
+                });
+            }, 5000);
+        });
+
+        // ====================
+// EDIT VIDEO FUNCTION
+// ====================
+function editVideo(videoId) {
+    console.log('Editing video:', videoId);
+    showLoading('Loading video details...');
+    
+    // First, fetch video details
+    fetch(`/dashboard/api/video/${videoId}/`)
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            
+            if (data.success) {
+                // Populate form with video data
+                document.getElementById('edit_video_id').value = videoId;
+                document.getElementById('edit_title').value = data.title;
+                document.getElementById('edit_year_published').value = data.year_published;
+                document.getElementById('edit_length').value = data.length;
+                document.getElementById('edit_introduction').value = data.introduction;
+                document.getElementById('edit_cast').value = data.cast;
+                document.getElementById('edit_theme').value = data.theme;
+                
+                // Set movie type
+                const movieTypeSelect = document.getElementById('edit_movie_type');
+                movieTypeSelect.value = data.movie_type;
+                
+                // Set expire date (format properly)
+                if (data.expire_date && data.expire_date !== 'Never') {
+                    const expireDate = new Date(data.expire_date);
+                    const formattedDate = expireDate.toISOString().split('T')[0];
+                    document.getElementById('edit_expire_date').value = formattedDate;
+                }
+                
+                // Show current files
+                document.getElementById('current_video_name').textContent = data.video_url ? 'Video uploaded' : 'No video';
+                document.getElementById('current_trailer_name').textContent = data.trailer_url ? 'Trailer uploaded' : 'No trailer';
+                
+                // Show current thumbnail
+                if (data.thumbnail_url) {
+                    document.getElementById('current_thumbnail').src = data.thumbnail_url;
+                }
+                
+                // Show the modal
+                showEditModal();
+                
+            } else {
+                showAlert('Error: ' + data.error, 'error');
+            }
+        })
+        .catch(error => {
+            hideLoading();
+            showAlert('Failed to load video details: ' + error.message, 'error');
+        });
+}
+
+// ====================
+// SHOW EDIT MODAL
+// ====================
+function showEditModal() {
+    const modal = document.getElementById('editModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+}
+
+// ====================
+// CLOSE EDIT MODAL
+// ====================
+function closeEditModal() {
+    const modal = document.getElementById('editModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore scrolling
+        
+        // Reset form
+        document.getElementById('editVideoForm').reset();
+        document.getElementById('current_thumbnail').src = '';
+    }
+}
+
+// ====================
+// UPDATE VIDEO FUNCTION
+// ====================
+function updateVideo(event) {
+    event.preventDefault();
+    showLoading('Updating video...');
+    
+    const form = event.target;
+    const formData = new FormData(form);
+    const videoId = formData.get('video_id');
+    
+    // Validate required fields
+    if (!formData.get('title') || !formData.get('introduction')) {
+        hideLoading();
+        showAlert('Title and Introduction are required fields', 'error');
+        return false;
+    }
+    
+    // AJAX update
+    fetch(`/dashboard/ajax/video/${videoId}/update/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        
+        if (data.success) {
+            showAlert(data.message, 'success');
+            closeEditModal();
+            
+            // Reload page to show updated video
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            showAlert('Error: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        showAlert('Update failed: ' + error.message, 'error');
+    });
+    
+    return false;
+}
+
+// ====================
+// MODAL CLICK OUTSIDE
+// ====================
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('editModal');
+    if (modal && event.target === modal) {
+        closeEditModal();
+    }
+});
+    </script>
+</body>
+</html>

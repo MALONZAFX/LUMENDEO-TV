@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pamela Candles | Luxury Scented Candles</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-black: #0a0a0a;
+            --primary-white: #ffffff;
+            --primary-red: #b90e2c;
+            --secondary-red: #8a0a23;
+            --gold-accent: #c9a96e;
+            --light-gray: #f5f5f5;
+            --medium-gray: #333333;
+            --dark-gray: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-white);
+            background-color: var(--primary-black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 0;
+            z-index: 1000;
+            background-color: rgba(10, 10, 10, 0.95);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        header.scrolled {
+            padding: 18px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-white);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--primary-red);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 40px;
+        }
+
+        nav ul li a {
+            color: var(--primary-white);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-red);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--primary-red);
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-icons a {
+            color: var(--primary-white);
+            margin-left: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .header-icons a:hover {
+            color: var(--primary-red);
+            transform: translateY(-2px);
+        }
+
+        .cart-count {
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+            position: absolute;
+            top: -10px;
+            right: -8px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://i.pinimg.com/1200x/f2/13/39/f2133970ea2d3378e5b2bf354771cfa6.jpg') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.8rem;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            color: var(--primary-white);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #ddd;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+            padding: 18px 45px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .cta-button:hover {
+            background-color: var(--secondary-red);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Section Common Styles */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.8rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            color: var(--primary-white);
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary-red);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #aaa;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        /* Scent Categories */
+        .scent-categories {
+            background-color: var(--dark-gray);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 992px) {
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .category-card {
+            background-color: var(--primary-black);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-red);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary-white);
+            background-color: var(--medium-gray);
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover .category-icon {
+            background-color: var(--primary-red);
+            transform: scale(1.1);
+        }
+
+        .category-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-white);
+        }
+
+        .category-card p {
+            color: #aaa;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        /* Featured Products */
+        .featured-products {
+            background-color: var(--primary-black);
+        }
+
+        .product-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: transparent;
+            color: var(--primary-white);
+            border: 1px solid var(--medium-gray);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--primary-red);
+            border-color: var(--primary-red);
+            transform: translateY(-2px);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .product-card {
+            background-color: var(--dark-gray);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-image {
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--primary-red);
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 3px;
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .product-actions {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .product-actions {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-white);
+            color: var(--primary-black);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 25px;
+        }
+
+        .product-info h3 {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            color: var(--primary-white);
+        }
+
+        .product-scent {
+            color: var(--gold-accent);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .product-scent i {
+            margin-right: 5px;
+        }
+
+        .product-info p {
+            color: #aaa;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .product-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gold-accent);
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #777;
+            font-size: 1.1rem;
+            margin-right: 8px;
+        }
+
+        .add-to-cart {
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-to-cart:hover {
+            background-color: var(--secondary-red);
+            transform: translateY(-2px);
+        }
+
+        .view-all {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        /* About Section */
+        .about {
+            background-color: var(--dark-gray);
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text h3 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: var(--primary-white);
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background-color: var(--primary-black);
+        }
+
+        .testimonial-slider {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .testimonial {
+            background-color: var(--dark-gray);
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .testimonial-text {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: #ddd;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .testimonial-author {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gold-accent);
+        }
+
+        .testimonial-rating {
+            color: var(--gold-accent);
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        /* Newsletter */
+        .newsletter {
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
+                        url('https://i.pinimg.com/736x/23/99/af/2399af5bbc53261d369afd29d4e26266.jpg') no-repeat center center/cover;
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .newsletter h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-white);
+        }
+
+        .newsletter p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: #ddd;
+        }
+
+        .newsletter-form {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--primary-white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .newsletter-form button {
+            background-color: var(--primary-red);
+            color: var(--primary-white);
+            border: none;
+            padding: 0 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background-color: var(--secondary-red);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-gray);
+            padding: 80px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-column h4 {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: var(--primary-white);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--primary-red);
+        }
+
+        .footer-column p {
+            color: #aaa;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-red);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--medium-gray);
+            color: var(--primary-white);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--primary-red);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--medium-gray);
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .hero h1 {
+                font-size: 3.2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                width: 100%;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .cta-button {
+                padding: 15px 35px;
+                font-size: 1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 30px;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-container">
+            <a href="#" class="logo">Pamela<span>Candles</span></a>
+            
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#categories">Scents</a></li>
+                    <li><a href="#products">Shop</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-icons">
+                <a href="#"><i class="fas fa-search"></i></a>
+                <a href="#"><i class="fas fa-user"></i></a>
+                <a href="#" class="cart" id="cart-toggle">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">3</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container hero-content">
+            <h1 class="fade-in">Luxury Scented Candles</h1>
+            <p class="fade-in">Discover Pamela Candles' exclusive collection of premium scented candles. Each candle is a masterpiece, crafted to transform your space with exquisite fragrances.</p>
+            <a href="#products" class="cta-button fade-in">Shop Collection</a>
+        </div>
+    </section>
+
+    <!-- Scent Categories -->
+    <section class="scent-categories" id="categories">
+        <div class="container">
+            <div class="section-title">
+                <h2 class="fade-in">Scent Families</h2>
+                <p class="section-subtitle fade-in">Explore our curated scent categories designed for every preference</p>
+            </div>
+            
+            <div class="categories-grid">
+                <!-- Category 1 -->
+                <div class="category-card fade-in">
+                    <div class="category-icon">
+                        <i class="fas fa-tree"></i>
+                    </div>
+                    <h3>Woody & Earthy</h3>
+                    <p>Sandalwood, cedar, vetiver, and patchouli for a warm, cozy atmosphere.</p>
+                </div>
+                
+                <!-- Category 2 -->
+                <div class="category-card fade-in">
+                    <div class="category-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h3>Floral & Romantic</h3>
+                    <p>Rose, jasmine, peony, and lavender for a blossoming garden experience.</p>
+                </div>
+                
+                <!-- Category 3 -->
+                <div class="category-card fade-in">
+                    <div class="category-icon">
+                        <i class="fas fa-lemon"></i>
+                    </div>
+                    <h3>Citrus & Fresh</h3>
+                    <p>Bergamot, lemon, grapefruit for an uplifting and revitalizing scent.</p>
+                </div>
+                
+                <!-- Category 4 -->
+                <div class="category-card fade-in">
+                    <div class="category-icon">
+                        <i class="fas fa-cookie-bite"></i>
+                    </div>
+                    <h3>Sweet & Gourmand</h3>
+                    <p>Vanilla, caramel, chocolate for comforting and delicious aromas.</p>
+                </div>
+                
+                <!-- Category 5 -->
+                <div class="category-card fade-in">
+                    <div class="category-icon">
+                        <i class="fas fa-water"></i>
+                    </div>
+                    <h3>Aquatic & Clean</h3>
+                    <p>Ocean breezes, rain, and crisp linen for refreshing scents.</p>
+                </div>
+                
+                <!-- Category 6 -->
+                <div class="category-card fade-in">
+                    <div class="category-icon">
+                        <i class="fas fa-pepper-hot"></i>
+                    </div>
+                    <h3>Spicy & Exotic</h3>
+                    <p>Warm spices, incense, amber for a mysterious and sensual ambiance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured-products" id="products">
+        <div class="container">
+            <div class="section-title">
+                <h2 class="fade-in">Our Collection</h2>
+                <p class="section-subtitle fade-in">Handcrafted candles with premium ingredients and exquisite fragrances</p>
+            </div>
+            
+            <div class="product-filter">
+                <button class="filter-btn active" data-filter="all">All Products</button>
+                <button class="filter-btn" data-filter="woody">Woody</button>
+                <button class="filter-btn" data-filter="floral">Floral</button>
+                <button class="filter-btn" data-filter="fresh">Fresh</button>
+                <button class="filter-btn" data-filter="gourmand">Gourmand</button>
+            </div>
+            
+            <div class="product-grid">
+                <!-- Product 1 -->
+                <div class="product-card fade-in" data-category="woody">
+                    <div class="product-badge">Best Seller</div>
+                    <div class="product-image">
+                        <img src="https://i.pinimg.com/736x/97/6b/c5/976bc5a7fd9cfd3301a4552401616397.jpg" alt="Noir & Santal Candle">
+                        <div class="product-actions">
+                            <button class="action-btn"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn"><i class="fas fa-heart"></i></button>
+                            <button class="action-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Noir & Santal</h3>
+                        <div class="product-scent"><i class="fas fa-tree"></i> Woody & Earthy</div>
+                        <p>A sophisticated blend of sandalwood, cedar, and subtle leather notes.</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="original-price">$75</span>
+                                <span class="price">$68</span>
+                            </div>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> Add</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card fade-in" data-category="floral">
+                    <div class="product-badge">New</div>
+                    <div class="product-image">
+                        <img src="https://i.pinimg.com/736x/36/c1/06/36c106decb4360e2be2440bdd99b1471.jpg" alt="Velvet Rose Candle">
+                        <div class="product-actions">
+                            <button class="action-btn"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn"><i class="fas fa-heart"></i></button>
+                            <button class="action-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Velvet Rose</h3>
+                        <div class="product-scent"><i class="fas fa-spa"></i> Floral & Romantic</div>
+                        <p>Luxurious Damascus rose petals blended with peony and amber.</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$72</span>
+                            </div>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> Add</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card fade-in" data-category="fresh">
+                    <div class="product-badge">Limited</div>
+                    <div class="product-image">
+                        <img src="https://i.pinimg.com/736x/6b/3b/26/6b3b268d73196d8cb8580546d4dad44b.jpg" alt="Oceanic Mist Candle">
+                        <div class="product-actions">
+                            <button class="action-btn"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn"><i class="fas fa-heart"></i></button>
+                            <button class="action-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Oceanic Mist</h3>
+                        <div class="product-scent"><i class="fas fa-water"></i> Aquatic & Clean</div>
+                        <p>Fresh sea salt, ozone, and driftwood with a touch of bergamot.</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$65</span>
+                            </div>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> Add</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="product-card fade-in" data-category="gourmand">
+                    <div class="product-badge">Popular</div>
+                    <div class="product-image">
+                        <img src="https://i.pinimg.com/736x/7f/33/9d/7f339d301d6019efd832ff52e51a6a2d.jpg" alt="Vanilla Bourbon Candle">
+                        <div class="product-actions">
+                            <button class="action-btn"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn"><i class="fas fa-heart"></i></button>
+                            <button class="action-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Vanilla Bourbon</h3>
+                        <div class="product-scent"><i class="fas fa-cookie-bite"></i> Sweet & Gourmand</div>
+                        <p>Rich Madagascar vanilla infused with bourbon and toasted oak.</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="original-price">$70</span>
+                                <span class="price">$62</span>
+                            </div>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> Add</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 5 -->
+                <div class="product-card fade-in" data-category="woody">
+                    <div class="product-image">
+                        <img src="https://i.pinimg.com/736x/23/99/af/2399af5bbc53261d369afd29d4e26266.jpg" alt="Cedar & Sage Candle">
+                        <div class="product-actions">
+                            <button class="action-btn"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn"><i class="fas fa-heart"></i></button>
+                            <button class="action-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Cedar & Sage</h3>
+                        <div class="product-scent"><i class="fas fa-tree"></i> Woody & Earthy</div>
+                        <p>Grounding cedarwood balanced with cleansing white sage.</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$58</span>
+                            </div>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> Add</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 6 -->
+                <div class="product-card fade-in" data-category="fresh">
+                    <div class="product-image">
+                        <img src="https://i.pinimg.com/1200x/f2/13/39/f2133970ea2d3378e5b2bf354771cfa6.jpg" alt="Citrus Grove Candle">
+                        <div class="product-actions">
+                            <button class="action-btn"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn"><i class="fas fa-heart"></i></button>
+                            <button class="action-btn"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Citrus Grove</h3>
+                        <div class="product-scent"><i class="fas fa-lemon"></i> Citrus & Fresh</div>
+                        <p>Zesty blend of bergamot, grapefruit, and mandarin with herbs.</p>
+                        <div class="product-price">
+                            <div>
+                                <span class="price">$55</span>
+                            </div>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="view-all">
+                <a href="#" class="cta-button">View All Products</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h3 class="fade-in">Craftsmanship & Quality</h3>
+                    <p class="fade-in">Since 2012, Pamela Candles has been dedicated to creating exceptional scented candles that transform spaces and elevate experiences.</p>
+                    <p class="fade-in">Each candle is hand-poured in small batches using sustainable soy-coconut wax and premium fragrance oils. Our master perfumers carefully craft each scent to create memorable experiences.</p>
+                    <a href="#" class="cta-button fade-in">Our Story</a>
+                </div>
+                
+                <div class="about-image fade-in">
+                    <img src="https://i.pinimg.com/736x/7f/33/9d/7f339d301d6019efd832ff52e51a6a2d.jpg" alt="Artisanal candle making">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2 class="fade-in">Customer Reviews</h2>
+                <p class="section-subtitle fade-in">What our customers are saying about Pamela Candles</p>
+            </div>
+            
+            <div class="testimonial-slider">
+                <div class="testimonial fade-in">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The Noir & Santal candle completely transformed my living room. The scent is sophisticated and long-lasting. I've already ordered three more as gifts!"</p>
+                    <p class="testimonial-author">- Sarah M., Interior Designer</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <div class="container">
+            <h2 class="fade-in">Join Our Newsletter</h2>
+            <p class="fade-in">Subscribe for updates on new collections, exclusive offers, and candle care tips.</p>
+            
+            <form class="newsletter-form fade-in">
+                <input type="email" placeholder="Enter your email address" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>Pamela Candles</h4>
+                    <p>Premium scented candles crafted with passion and precision. Elevate your space with our signature fragrances.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Shop</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> All Candles</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Best Sellers</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> New Arrivals</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Gift Sets</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Shipping</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Returns</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Scent Street, Fragrance City</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-envelope"></i> info@pamelacandles.com</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Pamela Candles. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Fade-in animation on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeInOnScroll = function() {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', fadeInOnScroll);
+        fadeInOnScroll();
+
+        // Cart functionality
+        const cartCount = document.querySelector('.cart-count');
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        const actionButtons = document.querySelectorAll('.action-btn');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const productCards = document.querySelectorAll('.product-card');
+        
+        let cartItems = 3;
+
+        // Add to cart from main button
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                cartItems++;
+                cartCount.textContent = cartItems;
+                
+                // Animation
+                this.innerHTML = '<i class="fas fa-check"></i> Added';
+                this.style.background = '#2e7d32';
+                
+                // Get product name for notification
+                const productCard = this.closest('.product-card');
+                const productName = productCard.querySelector('h3').textContent;
+                
+                // Show notification
+                showNotification(`${productName} added to cart!`);
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-shopping-cart"></i> Add';
+                    this.style.background = '';
+                }, 1500);
+            });
+        });
+
+        // Action buttons (quick actions)
+        actionButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                const icon = this.querySelector('i');
+                const productCard = this.closest('.product-card');
+                const productName = productCard.querySelector('h3').textContent;
+                
+                if (icon.classList.contains('fa-eye')) {
+                    // View product
+                    showNotification(`Viewing ${productName}`);
+                } else if (icon.classList.contains('fa-heart')) {
+                    // Add to wishlist
+                    this.innerHTML = '<i class="fas fa-heart" style="color: #b90e2c;"></i>';
+                    showNotification('Added to wishlist!');
+                } else if (icon.classList.contains('fa-shopping-cart')) {
+                    // Add to cart
+                    cartItems++;
+                    cartCount.textContent = cartItems;
+                    showNotification('Added to cart!');
+                }
+            });
+        });
+
+        // Product filtering
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const filterValue = this.getAttribute('data-filter');
+                
+                // Filter products
+                productCards.forEach(card => {
+                    if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                        }, 10);
+                    } else {
+                        card.style.opacity = '0';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // Show notification
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 100px;
+                    right: 30px;
+                    background-color: var(--dark-gray);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 5px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                    border-left: 4px solid var(--primary-red);
+                    z-index: 9999;
+                    animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    font-size: 0.95rem;
+                ">
+                    <i class="fas fa-check-circle" style="color: var(--primary-red);"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Add CSS for animations
+            if (!document.getElementById('notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100px); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    
+                    @keyframes fadeOut {
+                        to { opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Newsletter form submission
+        const newsletterForm = document.querySelector('.newsletter-form');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const emailInput = this.querySelector('input[type="email"]');
+                
+                if (emailInput.value) {
+                    showNotification('Thank you for subscribing to our newsletter!');
+                    emailInput.value = "";
+                }
+            });
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if (this.getAttribute('href') === '#') return;
+                
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

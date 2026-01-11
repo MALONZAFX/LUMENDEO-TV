@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Upload Monthly Video</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f7fa;
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2c3e50;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 15px 0 5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    input[type="datetime-local"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button[disabled] {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    button:hover:not([disabled]) {
+      background-color: #0056b3;
+    }
+
+    .progress {
+      font-size: 0.9em;
+      color: #555;
+      margin: 8px 0;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    #result.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    #result.error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+  <h1>Upload Monthly Video</h1>
+
+  <form id="uploadForm">
+    <label>Video File:</label>
+    <input type="file" id="video" accept="video/*" required>
+    <button type="button" onclick="uploadToS3('video')">Upload Video to S3</button>
+    <div class="progress" id="video-progress"></div>
+
+    <label>Trailer File:</label>
+    <input type="file" id="trailer" accept="video/*" required>
+    <button type="button" onclick="uploadToS3('trailer')">Upload Trailer to S3</button>
+    <div class="progress" id="trailer-progress"></div>
+
+    <label>Title:</label>
+    <input type="text" id="title" required>
+
+    <label>Thumbnail:</label>
+    <input type="file" id="thumbnail" accept="image/*" required>
+
+    <label>Year Published:</label>
+    <input type="number" id="year_published" required>
+
+    <label>Introduction:</label>
+    <textarea id="introduction" rows="4" required></textarea>
+
+    <label>Date Today:</label>
+    <input type="datetime-local" id="expire_date">
+
+    <label>Cast:</label>
+    <input type="text" id="cast" required>
+
+    <label>Theme:</label>
+    <input type="text" id="theme" required>
+
+    <label>Length:</label>
+    <input type="text" id="length" value="2.0">
+
+    <label>Movie Type:</label>
+    <input type="text" id="movie_type" value="drama">
+
+    <button type="submit" id="submitBtn" disabled>Submit</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    let uploadedVideoUrl = null;
+    let uploadedTrailerUrl = null;
+
+    async function uploadToS3(type) {
+      const input = document.getElementById(type);
+      const file = input.files[0];
+      const progressDiv = document.getElementById(`${type}-progress`);
+
+      if (!file) {
+        alert(`Please select a ${type} file.`);
+        return;
+      }
+
+      progressDiv.innerText = `Starting ${type} upload...`;
+
+      const partSize = 50 * 1024 * 1024;
+      const initRes = await fetch("/api/start-upload/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ file_name: file.name, content_type: file.type })
+      });
+
+      if (!initRes.ok) {
+        const errText = await initRes.text();
+        alert(`Failed to start upload: ${errText}`);
+        return;
+      }
+
+      const { upload_id, key } = await initRes.json();
+      const totalParts = Math.ceil(file.size / partSize);
+      const etags = [];
+
+      for (let partNumber = 1; partNumber <= totalParts; partNumber++) {
+        const start = (partNumber - 1) * partSize;
+        const end = Math.min(start + partSize, file.size);
+        const partBlob = file.slice(start, end);
+
+        progressDiv.innerText = `Uploading part ${partNumber} of ${totalParts}...`;
+
+        const presignRes = await fetch("/api/presign-part/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ upload_id, key, part_number: partNumber })
+        });
+
+        if (!presignRes.ok) {
+          alert(`Failed to get presigned URL for ${type} part ${partNumber}`);
+          return;
+        }
+
+        const { url } = await presignRes.json();
+        const uploadRes = await fetch(url, { method: "PUT", body: partBlob });
+
+        if (!uploadRes.ok) {
+          alert(`Failed to upload ${type} part ${partNumber}`);
+          return;
+        }
+
+        const eTag = uploadRes.headers.get("ETag");
+        etags.push({ PartNumber: partNumber, ETag: eTag });
+      }
+
+      const completeRes = await fetch("/api/complete-upload/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ upload_id, key, parts: etags })
+      });
+
+      if (!completeRes.ok) {
+        const err = await completeRes.text();
+        alert(`Failed to complete ${type} upload: ${err}`);
+        return;
+      }
+
+      const { file_url } = await completeRes.json();
+      progressDiv.innerHTML = `✅ ${type.charAt(0).toUpperCase() + type.slice(1)} uploaded!`;
+
+      if (type === "video") uploadedVideoUrl = file_url;
+      if (type === "trailer") uploadedTrailerUrl = file_url;
+
+      if (uploadedVideoUrl && uploadedTrailerUrl) {
+        document.getElementById("submitBtn").disabled = false;
+      }
+    }
+
+    document.getElementById("uploadForm").onsubmit = async function (e) {
+      e.preventDefault();
+      const resultDiv = document.getElementById("result");
+      resultDiv.className = "";
+
+      if (!uploadedVideoUrl || !uploadedTrailerUrl) {
+        alert("Please upload both video and trailer first.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("title", document.getElementById("title").value);
+      formData.append("video", uploadedVideoUrl);
+      formData.append("trailer", uploadedTrailerUrl);
+      formData.append("thumbnail", document.getElementById("thumbnail").files[0]);
+      formData.append("year_published", document.getElementById("year_published").value);
+      formData.append("introduction", document.getElementById("introduction").value);
+      formData.append("expire_date", document.getElementById("expire_date").value);
+      formData.append("cast", document.getElementById("cast").value);
+      formData.append("theme", document.getElementById("theme").value);
+      formData.append("length", document.getElementById("length").value);
+      formData.append("movie_type", document.getElementById("movie_type").value);
+
+      const res = await fetch("/api/create-video/", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        try {
+          const errorData = await res.json();
+          resultDiv.className = "error";
+          resultDiv.innerHTML = `❌ Error: ${errorData.error || "Unknown error"}`;
+        } catch (err) {
+          const errText = await res.text();
+          resultDiv.className = "error";
+          resultDiv.innerHTML = `❌ Error: ${errText}`;
+        }
+        return;
+      }
+
+      const data = await res.json();
+      resultDiv.className = "success";
+      resultDiv.innerHTML = `✅ <strong>Video created successfully!</strong> Video ID: ${data.id}`;
+      document.getElementById("submitBtn").disabled = true;
+    };
+  </script>
+</body>
+</html>
+

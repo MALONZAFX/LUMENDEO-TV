@@ -1,0 +1,390 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>{{ video.title }}</title>
+    <style>
+        /* COMPLETELY MINIMAL - NO VISIBLE ELEMENTS EXCEPT VIDEO */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* VIDEO CONTAINER - FILLS ENTIRE SCREEN */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 9999;
+        }
+
+        /* VIDEO ELEMENT - FILLS CONTAINER */
+        #fullVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures video covers entire area */
+            background: #000;
+        }
+
+        /* END SCREEN (HIDDEN UNTIL VIDEO ENDS) */
+        .end-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .end-screen h2 {
+            color: #FFD700;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .end-screen p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+
+        .return-btn {
+            background: #FFD700;
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .return-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* LOADING OVERLAY */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            color: #FFD700;
+            font-size: 24px;
+        }
+
+        /* FORCE LANDSCAPE ON MOBILE */
+        @media (max-width: 768px) {
+            /* Suggest landscape orientation */
+            .orientation-warning {
+                display: none; /* We'll control with JS */
+            }
+            
+            /* Fullscreen video adjustments for mobile */
+            #fullVideo {
+                object-fit: contain; /* Show entire video without cropping */
+            }
+        }
+
+        /* Hide all controls when not needed */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADING SCREEN -->
+    <div class="loading" id="loadingScreen">
+        <div style="text-align: center;">
+            <div style="width: 50px; height: 50px; border: 3px solid #FFD700; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+            <p>Loading video...</p>
+        </div>
+    </div>
+
+    <!-- VIDEO PLAYER (FULL SCREEN) -->
+    <div class="video-container" id="videoContainer">
+        {% if video and video.video %}
+        <video id="fullVideo" preload="auto" playsinline webkit-playsinline>
+            <source src="{{ video.video.url }}" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        {% else %}
+        <!-- ERROR SCREEN -->
+        <div class="end-screen" style="display: flex;">
+            <h2>Video Not Available</h2>
+            <p>The video you're looking for is not available.</p>
+            <button class="return-btn" onclick="goHome()">
+                Return to Homepage
+            </button>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- END SCREEN (SHOWS AFTER VIDEO FINISHES) -->
+    <div class="end-screen" id="endScreen">
+        <h2>Video Ended</h2>
+        <p>Thank you for watching "{{ video.title|default:'this video' }}".</p>
+        <button class="return-btn" onclick="goHome()">
+            Return to Homepage
+        </button>
+    </div>
+
+    <!-- AUTOPLAY BUTTON (HIDDEN UNTIL NEEDED) -->
+    <button id="autoplayBtn" class="hidden" style="position: fixed; top: 20px; right: 20px; z-index: 10002; background: #FFD700; color: #000; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold;">
+        TAP TO PLAY
+    </button>
+
+    <script>
+        // ====================
+        // GLOBAL VARIABLES
+        // ====================
+        let video = document.getElementById('fullVideo');
+        let loadingScreen = document.getElementById('loadingScreen');
+        let endScreen = document.getElementById('endScreen');
+        let autoplayBtn = document.getElementById('autoplayBtn');
+        let isFullscreen = false;
+
+        // ====================
+        // GO HOME FUNCTION
+        // ====================
+        function goHome() {
+            window.location.href = "{% url 'home' %}";
+        }
+
+        // ====================
+        // ENTER FULLSCREEN
+        // ====================
+        function enterFullscreen() {
+            const container = document.getElementById('videoContainer');
+            
+            if (container.requestFullscreen) {
+                container.requestFullscreen();
+            } else if (container.webkitRequestFullscreen) { /* Safari */
+                container.webkitRequestFullscreen();
+            } else if (container.msRequestFullscreen) { /* IE11 */
+                container.msRequestFullscreen();
+            }
+            
+            isFullscreen = true;
+        }
+
+        // ====================
+        // EXIT FULLSCREEN
+        // ====================
+        function exitFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) { /* Safari */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE11 */
+                document.msExitFullscreen();
+            }
+            
+            isFullscreen = false;
+        }
+
+        // ====================
+        // AUTO-ROTATE TO LANDSCAPE (MOBILE)
+        // ====================
+        function requestLandscape() {
+            // Only works on mobile devices with orientation API
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(error => {
+                    console.log('Orientation lock not supported:', error);
+                });
+            }
+        }
+
+        // ====================
+        // START VIDEO PLAYBACK
+        // ====================
+        function startVideo() {
+            if (!video) return;
+            
+            // Hide loading and autoplay button
+            loadingScreen.style.display = 'none';
+            autoplayBtn.classList.add('hidden');
+            
+            // Try to play video
+            video.play()
+                .then(() => {
+                    console.log('Video playback started');
+                    
+                    // Try to enter fullscreen
+                    setTimeout(enterFullscreen, 500);
+                    
+                    // Request landscape on mobile
+                    if (window.innerWidth < 768) {
+                        setTimeout(requestLandscape, 1000);
+                    }
+                })
+                .catch(error => {
+                    console.log('Autoplay failed:', error);
+                    // Show autoplay button for user interaction
+                    autoplayBtn.classList.remove('hidden');
+                    autoplayBtn.textContent = 'TAP TO PLAY VIDEO';
+                    loadingScreen.style.display = 'none';
+                });
+        }
+
+        // ====================
+        // VIDEO ENDED HANDLER
+        // ====================
+        function onVideoEnded() {
+            // Show end screen
+            endScreen.style.display = 'flex';
+            
+            // Exit fullscreen
+            exitFullscreen();
+            
+            // Auto-return to homepage after 10 seconds
+            setTimeout(goHome, 10000);
+        }
+
+        // ====================
+        // PAGE INITIALIZATION
+        // ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!video) {
+                loadingScreen.innerHTML = `
+                    <div style="text-align: center;">
+                        <h2 style="color: #FFD700;">Video Not Available</h2>
+                        <button class="return-btn" onclick="goHome()" style="margin-top: 20px;">
+                            Return to Homepage
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Set video event listeners
+            video.addEventListener('loadeddata', function() {
+                console.log('Video loaded, attempting autoplay...');
+                startVideo();
+            });
+
+            video.addEventListener('ended', onVideoEnded);
+            video.addEventListener('error', function(e) {
+                console.error('Video error:', e);
+                loadingScreen.innerHTML = `
+                    <div style="text-align: center;">
+                        <h2 style="color: #EF4444;">Video Error</h2>
+                        <p>Could not load video. Please try again.</p>
+                        <button class="return-btn" onclick="goHome()" style="margin-top: 20px;">
+                            Return to Homepage
+                        </button>
+                    </div>
+                `;
+            });
+
+            // Autoplay button click handler
+            autoplayBtn.addEventListener('click', function() {
+                startVideo();
+                this.classList.add('hidden');
+            });
+
+            // Fullscreen change listener
+            document.addEventListener('fullscreenchange', function() {
+                isFullscreen = !!document.fullscreenElement;
+            });
+
+            // Listen for clicks/taps anywhere to trigger video
+            document.addEventListener('click', function() {
+                if (!video.paused && !isFullscreen) {
+                    enterFullscreen();
+                }
+            });
+
+            // Auto-start after 1 second (gives time for page to load)
+            setTimeout(() => {
+                if (video.readyState >= 2) { // HAVE_CURRENT_DATA or more
+                    startVideo();
+                }
+            }, 1000);
+        });
+
+        // ====================
+        // KEYBOARD SHORTCUTS
+        // ====================
+        document.addEventListener('keydown', function(e) {
+            switch(e.key) {
+                case 'Escape':
+                    exitFullscreen();
+                    break;
+                case ' ':
+                case 'Spacebar':
+                    if (video) {
+                        video.paused ? video.play() : video.pause();
+                        e.preventDefault();
+                    }
+                    break;
+                case 'h':
+                case 'H':
+                    goHome();
+                    break;
+            }
+        });
+
+        // ====================
+        // MOBILE ORIENTATION HANDLING
+        // ====================
+        window.addEventListener('orientationchange', function() {
+            // Refresh video display on orientation change
+            if (video) {
+                video.style.width = '100%';
+                video.style.height = '100%';
+            }
+        });
+
+        // ====================
+        // PAGE VISIBILITY (PAUSE WHEN TAB INACTIVE)
+        // ====================
+        document.addEventListener('visibilitychange', function() {
+            if (video && document.hidden) {
+                video.pause();
+            } else if (video && !document.hidden && !video.ended) {
+                video.play();
+            }
+        });
+
+        // CSS Animation for loading spinner
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

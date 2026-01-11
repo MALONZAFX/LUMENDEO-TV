@@ -1,0 +1,1222 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumen Deo TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: #fff;
+        }
+
+        .container {
+            min-height: 100vh;
+            width: 100vw;
+            position: relative;
+            background: url("{% static 'img/magical.jpeg' %}") no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Full dark overlay */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+            z-index: 1;
+        }
+
+        /* Floating particles background */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, #FFD700 0%, #FFA500 50%, transparent 70%);
+            border-radius: 50%;
+            animation: float infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Main content layout - DESKTOP */
+        .main-content {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            flex-direction: row;
+        }
+
+        /* Text content section - DESKTOP */
+        .text-content {
+            flex: 0 0 35%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: 5%;
+            order: 1;
+        }
+
+        .logo {
+            width: 200px;
+            height: 200px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+            margin-bottom: 20px;
+        }
+
+        .video-description {
+            font-size: 16px;
+            line-height: 1.2;
+            color: #fff;
+            text-align: left;
+            word-break: break-word;
+            margin-bottom: 15px;
+        }
+
+        .video-description span {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .video-duration {
+            font-size: 16px;
+            color: #FFD700;
+            font-weight: 600;
+            font-style: italic;
+            margin-top: 15px;
+        }
+
+        /* Video player section - DESKTOP */
+        .video-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 60%;
+            margin-right: 5%;
+            order: 2;
+        }
+
+        .video-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #FFD700;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-container {
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 65vh;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+        }
+
+        .thumbnail-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 65vh;
+            display: none;
+            background: #000;
+        }
+
+        .play-button {
+            background: linear-gradient(to right, #FFD700, #FFA500);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            z-index: 10;
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .play-button i {
+            font-size: 24px;
+        }
+
+        .play-button:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .payment-cta {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .payment-cta-title {
+            font-size: 24px;
+            color: #FFD700;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .payment-cta-subtitle {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .mpesa-logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .pay-now-btn {
+            background: linear-gradient(to right, #FFD700, #FFA500);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .pay-now-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Payment Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .payment-modal {
+            background: #121212;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 2px solid #FFD700;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            color: #FFD700;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: #FFD700;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .movie-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .movie-poster-small {
+            width: 80px;
+            height: 120px;
+            border-radius: 5px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .movie-poster-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-details {
+            flex: 1;
+        }
+
+        .movie-title-modal {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #FFD700;
+        }
+
+        .movie-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #1e1e1e;
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, #FFD700, #FFA500);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .mpesa-instruction {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #FFD700;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .mpesa-instruction i {
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        /* Processing Modal */
+        .processing-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .processing-modal.active {
+            display: flex;
+        }
+
+        .processing-content {
+            background: #121212;
+            border-radius: 10px;
+            padding: 40px 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border: 2px solid #FFD700;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            border-top-color: #FFD700;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 25px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .processing-title {
+            font-size: 24px;
+            color: #FFD700;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .processing-message {
+            color: #fff;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .processing-notice {
+            color: #FFD700;
+            font-style: italic;
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Mobile logo */
+        .mobile-logo-container {
+            display: none;
+        }
+
+        /* No Videos Message */
+        .no-videos-message {
+            text-align: center;
+            padding: 100px 20px;
+            color: white;
+            z-index: 10;
+            position: relative;
+            width: 100%;
+        }
+
+        .no-videos-message h3 {
+            font-size: 28px;
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+                padding: 20px 15px;
+            }
+
+            .mobile-logo-container {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+                order: 1;
+                margin: 0 0 20px 0;
+            }
+
+            .mobile-logo {
+                width: 180px;
+                height: 180px;
+            }
+
+            .video-section {
+                order: 2;
+                width: 100%;
+                max-width: 90%;
+                margin: 0 auto;
+            }
+
+            .video-thumbnail {
+                height: 50vh;
+                max-height: 500px;
+                min-height: 350px;
+            }
+
+            .video-player {
+                height: 50vh;
+                max-height: 500px;
+                min-height: 350px;
+            }
+
+            .play-button {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+
+            .payment-cta {
+                order: 3;
+                width: 100%;
+                max-width: 500px;
+                margin: 20px auto 0;
+            }
+
+            .text-content {
+                order: 4;
+                width: 100%;
+                max-width: 800px;
+                margin: 20px auto;
+                align-items: center;
+                text-align: center;
+            }
+
+            .text-content .desktop-logo {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-logo {
+                width: 140px;
+                height: 140px;
+            }
+
+            .video-title {
+                font-size: 20px;
+            }
+
+            .video-thumbnail {
+                height: 250px;
+                min-height: 250px;
+                max-height: 300px;
+            }
+
+            .video-player {
+                height: 250px;
+                min-height: 250px;
+                max-height: 300px;
+            }
+
+            .play-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .payment-cta {
+                max-width: 400px;
+                margin: 15px auto;
+                padding: 15px;
+            }
+
+            .payment-cta-title {
+                font-size: 18px;
+            }
+
+            .payment-cta-subtitle {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .mobile-logo {
+                width: 120px;
+                height: 120px;
+            }
+
+            .video-title {
+                font-size: 18px;
+            }
+
+            .video-thumbnail {
+                height: 200px;
+                min-height: 200px;
+            }
+
+            .video-player {
+                height: 200px;
+                min-height: 200px;
+            }
+
+            .play-button {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+
+            .payment-modal {
+                width: 95%;
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Floating particles -->
+        <div class="particles" id="particles"></div>
+
+        <!-- Main content -->
+        <div class="main-content">
+            {% if videos %}
+                <!-- Mobile logo -->
+                <div class="mobile-logo-container">
+                    <img src="{% static 'img/logo.png' %}" alt="Lumen Deo TV Logo" class="logo mobile-logo">
+                </div>
+
+                <!-- Video section -->
+                <div class="video-section">
+                    <h2 class="video-title" style="color: #fff;">{{ videos.0.title }}</h2>
+                    <div class="video-container">
+                        <div class="video-thumbnail" id="videoThumbnail">
+                            {% if videos.0.thumbnail %}
+                                <img src="{{ videos.0.thumbnail.url }}" alt="{{ videos.0.title }}" class="thumbnail-image" id="thumbnailImage">
+                            {% else %}
+                                <img src="{% static 'img/default-thumbnail.jpg' %}" alt="{{ videos.0.title }}" class="thumbnail-image" id="thumbnailImage">
+                            {% endif %}
+                            <button class="play-button" id="playButton">
+                                <i class="fas fa-play"></i> PLAY 
+                            </button>
+                        </div>
+
+                        <!-- Video player -->
+                        <video class="video-player" id="videoPlayer" preload="metadata" controls playsinline>
+                            {% if videos.0.trailer %}
+                                <source src="{{ videos.0.trailer.url }}" type="video/mp4">
+                            {% endif %}
+                            Your browser does not support the video tag.
+                        </video>
+                        
+                        <div class="payment-cta" id="paymentCTA">
+                            <h3 class="payment-cta-title">Watch Full Movie</h3>
+                            <p class="payment-cta-subtitle">PAY KES 10.00</p>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/M-PESA_LOGO-01.svg/1200px-M-PESA_LOGO-01.svg.png" alt="M-Pesa" class="mpesa-logo">
+                            <button class="pay-now-btn" id="payNowBtn">
+                                <i class="fas fa-mobile-alt"></i> PAY WITH M-PESA
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text content -->
+                <div class="text-content">
+                    <img src="{% static 'img/logo.png' %}" alt="Lumen Deo TV Logo" class="logo desktop-logo">
+                    <div class="video-description">
+                        {{ videos.0.introduction|linebreaks }}
+                    </div>
+                    <div class="video-duration">{{ videos.0.length }} Hours</div>
+                    <div style="margin-top: 15px; color: #FFD700; font-size: 14px;">
+                        <i class="fas fa-star"></i> {{ videos.0.year_published }}
+                        <span style="margin: 0 10px;">•</span>
+                        <i class="fas fa-film"></i> {{ videos.0.movie_type|title }}
+                    </div>
+                </div>
+            {% else %}
+                <!-- No videos message -->
+                <div class="no-videos-message">
+                    <h3>Welcome to Lumen Deo TV</h3>
+                    <p>Check back soon for inspirational videos!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- M-PESA Payment Modal -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="payment-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Pay with M-PESA</h3>
+                <button class="close-modal" onclick="hidePaymentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                {% if videos %}
+                <div class="movie-info">
+                    <div class="movie-poster-small">
+                        {% if videos.0.thumbnail %}
+                            <img src="{{ videos.0.thumbnail.url }}" alt="{{ videos.0.title }}">
+                        {% else %}
+                            <div style="background: #333; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-film" style="font-size: 30px; color: #FFD700;"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="movie-details">
+                        <h4 class="movie-title-modal">{{ videos.0.title }}</h4>
+                        <div class="movie-price">KES 10.00</div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <form id="mpesa-form">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">M-PESA Phone Number</label>
+                        <input type="tel" id="phone" name="phone" 
+                               placeholder="0712345678" 
+                               pattern="^(0|254|\+254)?(7[0-9]|1[0-9])[0-9]{6,7}$"
+                               required>
+                        <small style="color: #888; font-size: 12px; display: block; margin-top: 5px;">
+                            Enter your Safaricom number (e.g., 0712345678)
+                        </small>
+                    </div>
+                    
+                    <div class="mpesa-instruction">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>How it works:</strong><br>
+                            1. Enter your details above<br>
+                            2. Click "SEND PAYMENT REQUEST"<br>
+                            3. Check your phone for STK Push<br>
+                            4. Enter your M-PESA PIN to complete
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" name="video_id" id="modalVideoId" value="{% if videos %}{{ videos.0.id }}{% endif %}">
+                    <input type="hidden" name="amount" value="10">
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> SEND PAYMENT REQUEST
+                    </button>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/M-PESA_LOGO-01.svg/800px-M-PESA_LOGO-01.svg.png" alt="M-Pesa" style="height: 30px; opacity: 0.8;">
+                        <p style="font-size: 12px; color: #888; margin-top: 5px;">Secure payment powered by M-PESA</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Modal -->
+    <div class="processing-modal" id="processingModal">
+        <div class="processing-content">
+            <div class="loader"></div>
+            <h3 class="processing-title" id="processingTitle">Processing Payment</h3>
+            <p class="processing-message" id="processingMessage">Please wait while we process your payment...</p>
+            <p class="processing-notice" id="processingNotice"></p>
+        </div>
+    </div>
+
+    <script>
+        // ====================
+        // GLOBAL VARIABLES
+        // ====================
+        let paymentModalShown = false;
+        let paymentCheckInterval = null;
+        let currentPaymentId = null;
+
+        // ====================
+        // INITIALIZATION
+        // ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Lumen Deo TV - Paystack M-PESA Ready');
+            
+            // Initialize particles
+            createParticles();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Debug info
+            {% if videos %}
+                console.log('Video loaded:', '{{ videos.0.title }}');
+                console.log('Video ID:', '{{ videos.0.id }}');
+            {% endif %}
+        });
+
+        // ====================
+        // SETUP EVENT LISTENERS
+        // ====================
+        function setupEventListeners() {
+            // Play button
+            const playButton = document.getElementById('playButton');
+            if (playButton) {
+                playButton.addEventListener('click', startVideoPlayback);
+            }
+            
+            // Pay now button
+            const payNowBtn = document.getElementById('payNowBtn');
+            if (payNowBtn) {
+                payNowBtn.addEventListener('click', function() {
+                    showPaymentModal();
+                });
+            }
+            
+            // Payment form submission
+            const mpesaForm = document.getElementById('mpesa-form');
+            if (mpesaForm) {
+                mpesaForm.addEventListener('submit', processMpesaPayment);
+            }
+            
+            // Modal close events
+            const paymentModal = document.getElementById('paymentModal');
+            if (paymentModal) {
+                paymentModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        hidePaymentModal();
+                    }
+                });
+            }
+            
+            // Video player events
+            const videoPlayer = document.getElementById('videoPlayer');
+            if (videoPlayer) {
+                videoPlayer.addEventListener('timeupdate', function() {
+                    // Show payment modal at 2:42 (162 seconds)
+                    if (this.currentTime >= 162 && !paymentModalShown) {
+                        paymentModalShown = true;
+                        this.pause();
+                        showPaymentModal();
+                    }
+                });
+                
+                videoPlayer.addEventListener('ended', function() {
+                    const paymentCTA = document.getElementById('paymentCTA');
+                    if (paymentCTA) {
+                        paymentCTA.style.display = 'flex';
+                    }
+                });
+            }
+        }
+
+        // ====================
+        // VIDEO PLAYBACK
+        // ====================
+        function startVideoPlayback() {
+            console.log('Starting video playback...');
+            
+            const thumbnail = document.getElementById('videoThumbnail');
+            const videoPlayer = document.getElementById('videoPlayer');
+            
+            if (!videoPlayer) {
+                console.error('Video player not found');
+                return;
+            }
+            
+            // Fade out thumbnail
+            thumbnail.style.opacity = '0';
+            
+            setTimeout(() => {
+                thumbnail.style.display = 'none';
+                videoPlayer.style.display = 'block';
+                
+                // Try to play the video
+                videoPlayer.play().catch(err => {
+                    console.error('Play error:', err);
+                    videoPlayer.controls = true;
+                });
+                
+            }, 300);
+        }
+
+        // ====================
+        // PAYMENT MODAL FUNCTIONS
+        // ====================
+        function showPaymentModal() {
+            console.log('Showing payment modal');
+            document.getElementById('paymentModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Pause video if playing
+            const videoPlayer = document.getElementById('videoPlayer');
+            if (videoPlayer && !videoPlayer.paused) {
+                videoPlayer.pause();
+            }
+        }
+
+        function hidePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // Reset form
+            const form = document.getElementById('mpesa-form');
+            if (form) {
+                form.reset();
+            }
+            
+            // Clear any payment check interval
+            if (paymentCheckInterval) {
+                clearInterval(paymentCheckInterval);
+                paymentCheckInterval = null;
+            }
+            
+            // Reset payment ID
+            currentPaymentId = null;
+        }
+
+        // ====================
+        // PROCESSING MODAL FUNCTIONS
+        // ====================
+        function showProcessingModal(title = "Processing Payment", message = "Please wait...", notice = "") {
+            document.getElementById('processingTitle').textContent = title;
+            document.getElementById('processingMessage').textContent = message;
+            document.getElementById('processingNotice').textContent = notice;
+            document.getElementById('processingModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideProcessingModal() {
+            document.getElementById('processingModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // ====================
+        // M-PESA PAYMENT PROCESSING
+        // ====================
+        async function processMpesaPayment(event) {
+            event.preventDefault();
+            
+            console.log('Processing M-PESA payment...');
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            // Get form values
+            const name = formData.get('name');
+            let phone = formData.get('phone');
+            const videoId = formData.get('video_id');
+            
+            console.log('Form data:', { name, phone, videoId });
+            
+            // Basic validation
+            if (!name || !phone) {
+                alert('Please fill in your name and phone number');
+                return false;
+            }
+            
+            // Clean phone number
+            phone = phone.replace(/\D/g, '');
+            
+            // Validate phone number format
+            const phoneRegex = /^(0|254|\+254)?(7[0-9]|1[0-9])[0-9]{6,7}$/;
+            if (!phoneRegex.test(phone)) {
+                alert('Please enter a valid Kenyan Safaricom number (e.g., 0712345678)');
+                return false;
+            }
+            
+            // Update form data with cleaned phone
+            formData.set('phone', phone);
+            
+            // Show processing modal
+            showProcessingModal(
+                "Sending Payment Request",
+                "Preparing to send STK Push...",
+                "This may take a few seconds"
+            );
+            
+            try {
+                // Add CSRF token to headers
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                
+                console.log('Sending request to /mpesa-checkout/');
+                
+                // Send payment request
+                const response = await fetch('/mpesa-checkout/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': csrfToken,
+                    }
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Server response:', data);
+                
+                if (data.success) {
+                    // Check if already paid
+                    if (data.already_paid === true) {
+                        console.log('User already paid for this video');
+                        hideProcessingModal();
+                        hidePaymentModal();
+                        
+                        // Redirect to full video
+                        if (data.video_id) {
+                            showProcessingModal(
+                                "Payment Verified",
+                                "Redirecting to full video...",
+                                "You already paid for this content"
+                            );
+                            
+                            setTimeout(() => {
+                                window.location.href = `/movie/?id=${data.video_id}`;
+                            }, 1500);
+                        }
+                        return;
+                    }
+                    
+                    // Save payment ID for status checking
+                    if (data.payment_id) {
+                        currentPaymentId = data.payment_id;
+                        console.log('Payment ID:', currentPaymentId);
+                    }
+                    
+                    // Show STK Push sent message
+                    showProcessingModal(
+                        "STK Push Sent!",
+                        "Check your phone to complete payment",
+                        "Enter your M-PESA PIN when prompted"
+                    );
+                    
+                    // Start checking payment status
+                    if (data.payment_id || data.reference) {
+                        startPaymentStatusCheck(data.payment_id, data.reference);
+                    }
+                    
+                } else {
+                    // Payment failed
+                    console.error('Payment failed:', data.error);
+                    hideProcessingModal();
+                    alert('Payment failed: ' + (data.error || 'Unknown error'));
+                }
+                
+            } catch (error) {
+                console.error('Payment processing error:', error);
+                hideProcessingModal();
+                alert('Error processing payment. Please try again.');
+            }
+            
+            return false;
+        }
+
+        // ====================
+        // PAYMENT STATUS CHECKING
+        // ====================
+        function startPaymentStatusCheck(paymentId, reference = null) {
+            console.log('Starting payment status check...');
+            
+            let checkCount = 0;
+            const maxChecks = 60; // Check for 3 minutes (60 * 3 seconds)
+            
+            // Clear any existing interval
+            if (paymentCheckInterval) {
+                clearInterval(paymentCheckInterval);
+            }
+            
+            paymentCheckInterval = setInterval(async () => {
+                checkCount++;
+                console.log(`Payment check #${checkCount}`);
+                
+                try {
+                    // Build URL
+                    let url = `/check-payment-status/`;
+                    const params = new URLSearchParams();
+                    
+                    if (paymentId) {
+                        params.append('payment_id', paymentId);
+                    }
+                    if (reference) {
+                        params.append('reference', reference);
+                    }
+                    
+                    if (params.toString()) {
+                        url += '?' + params.toString();
+                    }
+                    
+                    const response = await fetch(url);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        if (data.status === 'success' || data.already_paid === true) {
+                            // Payment successful
+                            console.log('✅ Payment confirmed!');
+                            clearInterval(paymentCheckInterval);
+                            
+                            showProcessingModal(
+                                "Payment Successful!",
+                                "Your payment has been confirmed",
+                                "Redirecting to full video..."
+                            );
+                            
+                            setTimeout(() => {
+                                hideProcessingModal();
+                                hidePaymentModal();
+                                
+                                if (data.video_id) {
+                                    window.location.href = `/movie/?id=${data.video_id}`;
+                                }
+                            }, 2000);
+                            
+                        } else if (data.status === 'pending') {
+                            // Still pending
+                            if (checkCount % 10 === 0) {
+                                console.log('Still waiting for payment confirmation...');
+                            }
+                        } else {
+                            // Payment failed
+                            console.error('Payment failed on server');
+                            clearInterval(paymentCheckInterval);
+                            hideProcessingModal();
+                            alert('Payment failed. Please try again.');
+                        }
+                    }
+                    
+                    // Timeout after max checks
+                    if (checkCount >= maxChecks) {
+                        console.log('Payment check timeout');
+                        clearInterval(paymentCheckInterval);
+                        hideProcessingModal();
+                        alert('Payment timeout. Please check your phone and try again.');
+                    }
+                    
+                } catch (error) {
+                    console.error('Status check error:', error);
+                }
+            }, 3000); // Check every 3 seconds
+        }
+
+        // ====================
+        // PARTICLE ANIMATION
+        // ====================
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 20;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 6 + 3;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+    </script>
+</body>
+</html>

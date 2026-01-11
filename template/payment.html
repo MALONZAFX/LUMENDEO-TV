@@ -1,0 +1,312 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 10px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a, #000);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            padding: 25px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+            max-height: 95vh;
+            overflow-y: auto;
+            margin: 0 10px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #d4af37;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+            padding: 5px;
+        }
+
+        .modal-body h3 {
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .payment-amount {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .payment-amount h4 {
+            color: #d4af37;
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+        .payment-amount p {
+            color: white;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        .payment-amount span {
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .payment-tabs {
+            display: flex;
+            border-bottom: 1px solid #333;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 5px;
+            background: none;
+            border: none;
+            color: #999;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .tab-btn.active {
+            color: #d4af37;
+            border-bottom: 2px solid #d4af37;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            color: #d4af37;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: white;
+            font-size: 0.9rem;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.3);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #d4af37, #c27c0e);
+            border: none;
+            border-radius: 4px;
+            color: black;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .secure-msg {
+            text-align: center;
+            color: #777;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 576px) {
+            .modal-content {
+                padding: 20px 15px;
+                max-height: 90vh;
+            }
+            
+            .modal-body h3 {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+            
+            .payment-amount {
+                padding: 12px;
+            }
+            
+            .payment-amount h4 {
+                font-size: 1.1rem;
+            }
+            
+            .payment-amount p {
+                font-size: 0.85rem;
+            }
+            
+            .tab-btn {
+                padding: 10px 5px;
+                font-size: 0.85rem;
+                min-width: 100px;
+            }
+            
+            .form-group input {
+                padding: 10px;
+            }
+            
+            button[type="submit"] {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .close-modal {
+                font-size: 20px;
+                top: 8px;
+                right: 8px;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 400px) {
+            .modal-content {
+                padding: 15px;
+            }
+            
+            .modal-body h3 {
+                font-size: 1.2rem;
+            }
+            
+            .payment-tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+            
+            .tab-btn {
+                text-align: left;
+                padding: 8px 10px;
+                border-bottom: none;
+                border-left: 2px solid transparent;
+            }
+            
+            .tab-btn.active {
+                border-bottom: none;
+                border-left: 2px solid #d4af37;
+            }
+            
+            .form-group input {
+                padding: 8px;
+                font-size: 0.85rem;
+            }
+            
+            button[type="submit"] {
+                padding: 8px;
+                font-size: 0.85rem;
+            }
+            
+            .secure-msg {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Payment Modal -->
+<div class="payment-modal" style="display: flex;">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+        <div class="modal-body">
+            <h3>Complete Your Purchase</h3>
+            <div class="payment-amount">
+                <p>If you have already paid for the movie, just enter your M-Pesa number you will be directed to the movie.</p>
+                <p>If no payment you will receive prompt to pay 10 kshs</p>
+            </div>
+            <div class="payment-options">
+                <div class="payment-tabs">
+                    <button class="tab-btn active" data-tab="mpesa">M-Pesa</button>
+                </div>
+                <div id="mpesa-tab" class="tab-content" style="display: block;">
+                    <form id="mpesa-form" method="POST" action="{% url 'mpesa_checkout' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="phone">M-Pesa Phone Number</label>
+                            <input type="tel" name="phone" id="phone" placeholder="e.g. 0712345678" required>
+                        </div>
+                        <input type="hidden" name="amount" value="10">
+                        <button type="submit">Check Payment</button>
+                    </form>
+                </div>
+            </div>
+            <p class="secure-msg">Your payment is secure and encrypted</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Close modal function
+    function closeModal() {
+        document.querySelector('.payment-modal').style.display = 'none';
+    }
+    
+    // Close modal when clicking outside content
+    document.querySelector('.payment-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+    
+    // Prevent form submission from closing the modal (if needed)
+    document.getElementById('mpesa-form').addEventListener('submit', function(e) {
+        // Form will submit normally (Django will handle it)
+        // If you need to prevent default and handle with AJAX, you would do it here
+    });
+</script>
+
+</body>
+</html>
